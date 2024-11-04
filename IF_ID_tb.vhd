@@ -90,6 +90,34 @@ architecture Behavioral of IF_ID_tb is
 		);
 	end component;
 	
+	component EX_MEM
+		Port (
+			clk: in std_logic;
+			reset: in std_logic;
+		
+			-- Input signals from EX stage
+			EX_ALUresult: in std_logic_vector(31 downto 0);
+			EX_ReadData2: in std_logic_vector(31 downto 0);
+			EX_DestReg: in std_logic_vector(4 downto 0);
+			EX_MemRead: in std_logic;
+			EX_MemWrite: in std_logic;
+			EX_MemToReg: in std_logic;
+			EX_RegWrite: in std_logic;
+			EX_Branch: in std_logic;
+		
+			-- Output signals to MEM stage
+			MEM_ALUresult: out std_logic_vector(31 downto 0);
+			MEM_ReadData2: out std_logic_vector(31 downto 0);
+			MEM_DestReg: out std_logic_vector(4 downto 0);
+			MEM_MemRead: out std_logic;
+			MEM_MemWrite: out std_logic;
+			MEM_MemToReg: out std_logic;
+			MEM_RegWrite: out std_logic;
+			MEM_Branch: out std_logic
+		);
+	end component;
+	
+
 	component ControlUnit
 		Port (
 			clk: in std_logic;
@@ -267,6 +295,27 @@ begin
 			funct => funct,
 			ALUout => ALUout,
 			carryOut => carryOut
+		);
+	
+	uut_EX_MEM: EX_MEM
+		Port map (
+			clk => clk,
+			reset => reset,
+			EX_ALUresult => EX_ALUresult,
+			EX_ReadData2 => EX_ReadData2,
+			EX_DestReg => EX_DestReg,
+			EX_MemRead => EX_MemRead,
+			EX_MemWrite => EX_MemWrite,
+			EX_MemToReg => EX_MemToReg,
+			EX_Branch => EX_Branch,
+			MEM_ALUresult => MEM_ALUresult,
+			MEM_ReadData2 => MEM_ReadData2,
+			MEM_DestReg => MEM_DestReg,
+			MEM_MemRead => MEM_MemRead,
+			MEM_MemWrite => MEM_MemWrite,
+			MEM_MemToReg => MEM_MemToReg,
+			MEM_RegWrite => MEM_RegWrite,
+			MEM_Branch => MEM_Branch
 		);
 	
 	process
