@@ -357,5 +357,6 @@ begin
 	ID_ALUsrc <= ALUsrc;
 	ID_ALUop <= ALUop;
 	ID_RegWrite <= RegWrite;
-	
+	EX_ALUresult <= ALUresult;
+	pcSrc <= MEM_ALUresult and MEM_Branch;
 end Behavioral;																																							
