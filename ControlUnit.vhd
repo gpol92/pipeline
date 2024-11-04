@@ -11,7 +11,11 @@ entity ControlUnit is
 		ALUsrc: out std_logic;
 		ALUop: out std_logic_vector(3 downto 0);
 		regDst: out std_logic;
-		regWrite: out std_logic
+		regWrite: out std_logic;
+		MemToReg: out std_logic;
+		MemRead: out std_logic;
+		MemWrite: out std_logic;
+		Branch: out std_logic
 	);
 end ControlUnit;
 
@@ -55,11 +59,19 @@ begin
 						ALUop <= "0001";
 						regDst <= '0';
 						regWrite <= '1';
+						MemRead <= 'X';
 					when arithOp =>
 						ALUsrc <= '0';
 						ALUop <= "0010";
 						regDst <= '1';
 						regWrite <= '1';
+						MemRead <= 'X';
+					when loadOp =>
+						ALUsrc <= '1';
+						ALUop <= "0010";
+						RegDst <= '0';
+						RegWrite <= '1';
+						MemRead <= '1';
 					when others =>
 						ALUsrc <= 'X';
 						ALUop <= "0000";

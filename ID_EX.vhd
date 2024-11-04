@@ -15,6 +15,7 @@ entity ID_EX is
 		ID_SignExtImm: in std_logic_vector(31 downto 0);
 		ID_RegAddr1: in std_logic_vector(4 downto 0);
 		ID_RegAddr2: in std_logic_vector(4 downto 0);
+		ID_PCSrc: in std_logic;
 		ID_RegDst: in std_logic;
 		ID_ALUsrc: in std_logic;
 		ID_MemToReg: in std_logic;
@@ -32,6 +33,7 @@ entity ID_EX is
 		EX_SignExtImm: out std_logic_vector(31 downto 0);
 		EX_RegAddr1: out std_logic_vector(4 downto 0);
 		EX_RegAddr2: out std_logic_vector(4 downto 0);
+		EX_PCSrc: out std_logic;
 		EX_RegDst: out std_logic;
 		EX_ALUsrc: out std_logic;
 		EX_MemToReg: out std_logic;
@@ -51,6 +53,7 @@ architecture Behavioral of ID_EX is
 	signal SignExtImm_reg: std_logic_vector(31 downto 0);
 	signal RegAddr1_reg: std_logic_vector(4 downto 0);
 	signal RegAddr2_reg: std_logic_vector(4 downto 0);
+	signal PCSrc_reg: std_logic;
 	signal RegDst_reg: std_logic;
 	signal ALUsrc_reg: std_logic;
 	signal MemToReg_reg: std_logic;
@@ -70,6 +73,7 @@ begin
 			SignExtImm_reg <= (others => '0');
 			RegAddr1_reg <= (others => '0');
 			RegAddr2_reg <= (others => '0');
+			PCSrc_reg <= '0';
 			RegDst_reg <= '0';
 			ALUsrc_reg <= '0';
 			MemToReg_reg <= '0';
@@ -86,6 +90,7 @@ begin
 			SignExtImm_reg <= ID_SignExtImm;
 			RegAddr1_reg <= ID_RegAddr1;
 			RegAddr2_reg <= ID_RegAddr2;
+			PCSrc_reg <= ID_PCSrc;
 			RegDst_reg <= ID_RegDst;
 			ALUsrc_reg <= ID_ALUsrc;
 			MemToReg_reg <= ID_MemToReg;
@@ -104,6 +109,7 @@ begin
 	EX_SignExtImm <= SignExtImm_reg;
 	EX_RegAddr1 <= RegAddr1_reg;
 	EX_RegAddr2 <= RegAddr2_reg;
+	EX_PCSrc <= PCSrc_reg;
 	EX_RegDst <= RegDst_reg;
 	EX_ALUsrc <= ALUsrc_reg;
 	EX_MemToReg <= MemToReg_reg;

@@ -25,7 +25,7 @@ entity EX_MEM is
 		MEM_MemWrite: out std_logic;
 		MEM_MemToReg: out std_logic;
 		MEM_RegWrite: out std_logic;
-		MEM_Branch: out std_logic;
+		MEM_Branch: out std_logic
 	);
 end EX_MEM;
 
@@ -45,11 +45,11 @@ begin
 			ALUresult_reg <= (others => '0');
 			ReadData2_reg <= (others => '0');
 			DestReg_reg <= (others => '0');
-			MemRead_reg <= (others => '0');
-			MemWrite_reg <= (others => '0');
-			MemToReg_reg <= (others => '0');
-			RegWrite_reg <= (others => '0');
-			Branch_reg <= (others => '0');
+			MemRead_reg <= '0';
+			MemWrite_reg <= '0';
+			MemToReg_reg <= '0';
+			RegWrite_reg <= '0';
+			Branch_reg <= '0';
 		elsif rising_edge(clk) then
 			ALUresult_reg <= EX_ALUresult;
 			ReadData2_reg <= EX_ReadData2;

@@ -308,4 +308,5 @@ begin
 	ID_ALUsrc <= ALUsrc;
 	ID_ALUop <= ALUop;
 	ID_RegWrite <= RegWrite;
+	
 end Behavioral;																																							
