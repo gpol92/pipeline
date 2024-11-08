@@ -7,6 +7,7 @@ entity ControlUnit is
 		clk: in std_logic;
 		reset: in std_logic;
 		opcode: in std_logic_vector(5 downto 0);
+		zero: in std_logic;
 		pcSrc: out std_logic;
 		ALUsrc: out std_logic;
 		ALUop: out std_logic_vector(3 downto 0);
@@ -72,11 +73,23 @@ begin
 						RegDst <= '0';
 						RegWrite <= '1';
 						MemRead <= '1';
+					when bneOp =>
+						ALUop <= "0011";
+						ALUsrc <= '0';
+						RegDst <= 'X';
+						RegWrite <= '0';
+						if zero = '0' then
+							Branch <= '0';
+						elsif zero = '1' then 
+							Branch <= '1';
+						end if;
+						MemRead <= 'X';
 					when others =>
 						ALUsrc <= 'X';
 						ALUop <= "0000";
-						regDst <= 'X';
-						regWrite <= '0';
+						RegDst <= 'X';
+						RegWrite <= '0';
+						MemRead <= 'X';
 				end case;
 				nextState <= EXECUTE;
 			when EXECUTE =>

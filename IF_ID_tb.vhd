@@ -122,6 +122,7 @@ architecture Behavioral of IF_ID_tb is
 			clk: in std_logic;
 			reset: in std_logic;
 			opcode: in std_logic_vector(5 downto 0);
+			zero: in std_logic;
 			pcSrc: out std_logic;
 			ALUsrc: out std_logic;
 			ALUop: out std_logic_vector(3 downto 0);
@@ -290,6 +291,7 @@ begin
 			clk => clk,
 			reset => reset,
 			opcode => opcode,
+			zero => zero,
 			pcSrc => pcSrc,
 			ALUsrc => ALUsrc,
 			ALUop => ALUop,
@@ -367,6 +369,6 @@ begin
 	ID_ALUsrc <= ALUsrc;
 	ID_ALUop <= ALUop;
 	ID_RegWrite <= RegWrite;
-	EX_ALUresult <= ALUresult;
-	pcSrc <= MEM_ALUresult and MEM_Branch;
+	EX_ALUresult <= ALUout;
+	pcSrc <= zero and MEM_Branch;
 end Behavioral;																																							
