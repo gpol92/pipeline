@@ -9,7 +9,8 @@ entity ALU is
 		ALUop: in std_logic_vector(3 downto 0);
 		funct: in std_logic_vector(3 downto 0);
 		ALUout: out std_logic_vector(31 downto 0);
-		carryOut: out std_logic
+		carryOut: out std_logic;
+		zero: out std_logic
 	);
 end ALU;
 
@@ -20,6 +21,7 @@ architecture Behavioral of ALU is
 begin
 	process(opA, opB, ALUop, funct)
 	begin
+		zero <= '0';
 		case(ALUop) is
 			when "0000" =>
 				ALUresult <= opA;
@@ -33,9 +35,9 @@ begin
 				end if;
 			when "0011" =>
 				if opA = opB then
-					ALUresult <= (0 => '1', others => '0');
+					zero <= '1';
 				else 
-					ALUresult <= (others => '0');
+					zero <= '0';
 				end if;
 			when others => ALUresult <= (others => '0');
 		end case;

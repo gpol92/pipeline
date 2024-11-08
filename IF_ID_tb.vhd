@@ -102,7 +102,6 @@ architecture Behavioral of IF_ID_tb is
 			EX_MemRead: in std_logic;
 			EX_MemWrite: in std_logic;
 			EX_MemToReg: in std_logic;
-			EX_RegWrite: in std_logic;
 			EX_Branch: in std_logic;
 		
 			-- Output signals to MEM stage
@@ -137,7 +136,8 @@ architecture Behavioral of IF_ID_tb is
 			ALUop: in std_logic_vector(3 downto 0);
 			funct: in std_logic_vector(3 downto 0);
 			ALUout: out std_logic_vector(31 downto 0);
-			carryOut: out std_logic
+			carryOut: out std_logic;
+			zero: out std_logic
 		);
 	end component;
 
@@ -200,6 +200,16 @@ architecture Behavioral of IF_ID_tb is
 	signal funct: std_logic_vector(3 downto 0) := (others => '0');
 	signal ALUout: std_logic_vector(31 downto 0) := (others => '0');
 	signal carryOut: std_logic := '0';
+	signal zero: std_logic := '0';
+	signal EX_ALUresult: std_logic_vector(31 downto 0) := (others => '0');
+	signal EX_DestReg: std_logic_vector(4 downto 0) := (others => '0');
+	signal MEM_ALUresult: std_logic_vector(31 downto 0) := (others => '0');
+	signal MEM_ReadData2: std_logic_vector(31 downto 0) := (others => '0');
+	signal MEM_MemRead: std_logic := '0';
+	signal MEM_MemWrite: std_logic := '0';
+	signal MEM_MemToReg: std_logic := '0';
+	signal MEM_Branch: std_logic := '0';
+	signal MEM_DestReg: std_logic_vector(4 downto 0) := (others => '0');
 	
 begin
 	
@@ -294,7 +304,8 @@ begin
 			ALUop => ALUop,
 			funct => funct,
 			ALUout => ALUout,
-			carryOut => carryOut
+			carryOut => carryOut,
+			zero => zero
 		);
 	
 	uut_EX_MEM: EX_MEM
@@ -314,7 +325,6 @@ begin
 			MEM_MemRead => MEM_MemRead,
 			MEM_MemWrite => MEM_MemWrite,
 			MEM_MemToReg => MEM_MemToReg,
-			MEM_RegWrite => MEM_RegWrite,
 			MEM_Branch => MEM_Branch
 		);
 	
