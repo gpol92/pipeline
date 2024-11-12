@@ -62,6 +62,7 @@ architecture Behavioral of IF_ID_tb is
 			ID_SignExtImm: in std_logic_vector(31 downto 0);
 			ID_RegAddr1: in std_logic_vector(4 downto 0);
 			ID_RegAddr2: in std_logic_vector(4 downto 0);
+			ID_PCSrc: in std_logic;
 			ID_RegDst: in std_logic;
 			ID_ALUsrc: in std_logic;
 			ID_MemToReg: in std_logic;
@@ -79,6 +80,7 @@ architecture Behavioral of IF_ID_tb is
 			EX_SignExtImm: out std_logic_vector(31 downto 0);
 			EX_RegAddr1: out std_logic_vector(4 downto 0);
 			EX_RegAddr2: out std_logic_vector(4 downto 0);
+			EX_PCSrc: out std_logic;
 			EX_RegDst: out std_logic;
 			EX_ALUsrc: out std_logic;
 			EX_MemToReg: out std_logic;
@@ -174,6 +176,7 @@ architecture Behavioral of IF_ID_tb is
 	signal ID_SignExtImm: std_logic_vector(31 downto 0) := (others => '0');
 	signal ID_RegAddr1: std_logic_vector(4 downto 0) := (others => '0');
 	signal ID_RegAddr2: std_logic_vector(4 downto 0) := (others => '0');
+	signal ID_PCSrc: std_logic := '0';
 	signal ID_RegDst: std_logic := '0';
 	signal ID_ALUsrc: std_logic := '0';
 	signal ID_MemToReg: std_logic := '0';
@@ -189,6 +192,7 @@ architecture Behavioral of IF_ID_tb is
 	signal EX_SignExtImm: std_logic_vector(31 downto 0) := (others => '0');
 	signal EX_RegAddr1: std_logic_vector(4 downto 0) := (others => '0');
 	signal EX_RegAddr2: std_logic_vector(4 downto 0) := (others => '0');
+	signal EX_PCSrc: std_logic := '0';
 	signal EX_RegDst: std_logic := '0';
 	signal EX_ALUsrc: std_logic := '0';
 	signal EX_MemToReg: std_logic := '0';
@@ -225,6 +229,7 @@ begin
 			ID_SignExtImm => ID_SignExtImm,
 			ID_RegAddr1 => ID_RegAddr1,
 			ID_RegAddr2 => ID_RegAddr2,
+			ID_PCSrc => ID_PCSrc,		
 			ID_RegDst => ID_RegDst,
 			ID_ALUsrc => ID_ALUsrc,
 			ID_MemToReg => ID_MemToReg,
@@ -240,6 +245,7 @@ begin
 			EX_SignExtImm => EX_SignExtImm,
 			EX_RegAddr1 => EX_RegAddr1,
 			EX_RegAddr2 => EX_RegAddr2,
+			EX_PCSrc => EX_PCSrc,
 			EX_RegDst => EX_RegDst,
 			EX_ALUsrc => EX_ALUsrc,
 			EX_MemToReg => EX_MemToReg,

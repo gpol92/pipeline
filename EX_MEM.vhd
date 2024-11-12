@@ -14,7 +14,6 @@ entity EX_MEM is
 		EX_MemRead: in std_logic;
 		EX_MemWrite: in std_logic;
 		EX_MemToReg: in std_logic;
-		EX_RegWrite: in std_logic;
 		EX_Branch: in std_logic;
 		
 		-- Output signals to MEM stage
@@ -24,7 +23,6 @@ entity EX_MEM is
 		MEM_MemRead: out std_logic;
 		MEM_MemWrite: out std_logic;
 		MEM_MemToReg: out std_logic;
-		MEM_RegWrite: out std_logic;
 		MEM_Branch: out std_logic
 	);
 end EX_MEM;
@@ -36,7 +34,6 @@ architecture Behavioral of EX_MEM is
 	signal MemRead_reg: std_logic;
 	signal MemWrite_reg: std_logic;
 	signal MemToReg_reg: std_logic;
-	signal RegWrite_reg: std_logic;
 	signal Branch_reg: std_logic;
 begin
 	process(clk, reset)
@@ -48,7 +45,6 @@ begin
 			MemRead_reg <= '0';
 			MemWrite_reg <= '0';
 			MemToReg_reg <= '0';
-			RegWrite_reg <= '0';
 			Branch_reg <= '0';
 		elsif rising_edge(clk) then
 			ALUresult_reg <= EX_ALUresult;
@@ -57,7 +53,6 @@ begin
 			MemRead_reg <= EX_MemRead;
 			MemWrite_reg <= EX_MemWrite;
 			MemToReg_reg <= EX_MemToReg;
-			RegWrite_reg <= EX_RegWrite;
 			Branch_reg <= EX_Branch;
 		end if;
 	end process;
@@ -68,6 +63,5 @@ begin
 	MEM_MemRead <= MemRead_reg;
 	MEM_MemWrite <= MemWrite_reg;
 	MEM_MemToReg <= MemToReg_reg;
-	MEM_RegWrite <= RegWrite_reg;
 	MEM_Branch <= Branch_reg;
 end Behavioral;
