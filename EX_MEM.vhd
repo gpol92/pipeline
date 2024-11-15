@@ -8,6 +8,7 @@ entity EX_MEM is
 		reset: in std_logic;
 		
 		-- Input signals from EX stage
+		EX_zero: in std_logic;
 		EX_ALUresult: in std_logic_vector(31 downto 0);
 		EX_ReadData2: in std_logic_vector(31 downto 0);
 		EX_DestReg: in std_logic_vector(4 downto 0);
@@ -17,6 +18,7 @@ entity EX_MEM is
 		EX_Branch: in std_logic;
 		
 		-- Output signals to MEM stage
+		MEM_zero: out std_logic;
 		MEM_ALUresult: out std_logic_vector(31 downto 0);
 		MEM_ReadData2: out std_logic_vector(31 downto 0);
 		MEM_DestReg: out std_logic_vector(4 downto 0);
@@ -28,6 +30,7 @@ entity EX_MEM is
 end EX_MEM;
 
 architecture Behavioral of EX_MEM is
+	signal zero_reg: std_logic;
 	signal ALUresult_reg: std_logic_vector(31 downto 0);
 	signal ReadData2_reg: std_logic_vector(31 downto 0);
 	signal DestReg_reg: std_logic_vector(4 downto 0);
@@ -39,6 +42,7 @@ begin
 	process(clk, reset)
 	begin
 		if reset = '1' then
+			zero_reg <= '0';
 			ALUresult_reg <= (others => '0');
 			ReadData2_reg <= (others => '0');
 			DestReg_reg <= (others => '0');
@@ -47,6 +51,7 @@ begin
 			MemToReg_reg <= '0';
 			Branch_reg <= '0';
 		elsif rising_edge(clk) then
+			zero_reg <= EX_zero;
 			ALUresult_reg <= EX_ALUresult;
 			ReadData2_reg <= EX_ReadData2;
 			DestReg_reg <= EX_DestReg;
@@ -57,6 +62,7 @@ begin
 		end if;
 	end process;
 	
+	MEM_zero <= zero_reg;
 	MEM_ALUresult <= ALUresult_reg;
 	MEM_ReadData2 <= ReadData2_reg;
 	MEM_DestReg <= DestReg_reg;
