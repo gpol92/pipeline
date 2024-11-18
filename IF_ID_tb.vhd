@@ -126,14 +126,13 @@ architecture Behavioral of IF_ID_tb is
 			reset: in std_logic;
 			opcode: in std_logic_vector(5 downto 0);
 			zero: in std_logic;
-			pcSrc: out std_logic;
 			ALUsrc: out std_logic;
 			ALUop: out std_logic_vector(3 downto 0);
 			RegDst: out std_logic;
 			RegWrite: out std_logic;
-			MemToReg: out std_logic;
-			MemRead: out std_logic;
-			MemWrite: out std_logic;
+			CU_MemToReg: out std_logic;
+			CU_MemRead: out std_logic;
+			CU_MemWrite: out std_logic;
 			Branch: out std_logic
 		);
 	end component;
@@ -200,6 +199,10 @@ architecture Behavioral of IF_ID_tb is
 	signal read_data1: std_logic_vector(31 downto 0);
 	signal read_data2: std_logic_vector(31 downto 0);
 	
+	
+	signal CU_MemToReg: std_logic := '0';
+	signal CU_MemRead: std_logic := '0';
+	signal CU_MemWrite: std_logic := '0';
 	signal MemToReg: std_logic := '0';
 	signal MemRead: std_logic := '0';
 	signal MemWrite: std_logic := '0';
@@ -364,14 +367,13 @@ begin
 			reset => reset,
 			opcode => opcode,
 			zero => zero,
-			pcSrc => pcSrc,
 			ALUsrc => ALUsrc,
 			ALUop => ALUop,
 			RegDst => RegDst,
 			RegWrite => RegWrite,
-			MemToReg => MemToReg,
-			MemRead => MemRead,
-			MemWrite => MemWrite,
+			CU_MemToReg => CU_MemToReg,
+			CU_MemRead => CU_MemRead,
+			CU_MemWrite => CU_MemWrite,
 			Branch => Branch
 		);
 	
@@ -442,9 +444,12 @@ begin
 	EX_ALUresult <= ALUout;
 	EX_zero <= zero;
 	pcSrc <= MEM_zero and MEM_Branch;
+	ID_MemRead <= CU_MemRead;
+	ID_MemWrite <= CU_MemWrite;
+	ID_MemToReg <= CU_MemToReg;
 	MemRead <= MEM_MemRead;
-	MemWrite <= MEM_MemWrite;
 	MemToReg <= WB_MemToReg;
+	MemWrite <= MEM_MemWrite;
 	write_data <= WB_ALUresult when MemToReg = '0' else WB_MemDataOut when MemToReg = '1';
 	data_in <= MEM_ALUresult;
 	MEM_MemDataOut <= data_out;
