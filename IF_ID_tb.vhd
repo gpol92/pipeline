@@ -6,6 +6,15 @@ entity IF_ID_tb is
 end IF_ID_tb;
 
 architecture Behavioral of IF_ID_tb is
+	
+	type MEM_WB_signals is record
+		MemToReg: std_logic;
+		MemDataOut: std_logic_vector(31 downto 0) := (others => '0');
+		ALUresult: std_logic_vector(31 downto 0) := (others => '0')
+	end record;
+	
+	signal MEM_WB: MEM_WB_signals;
+	
 	component IF_ID
 		Port (
 			clk: in std_logic;
@@ -163,106 +172,11 @@ architecture Behavioral of IF_ID_tb is
 		Port (
 			clk: in std_logic;
 			reset: in std_logic;
-			MEM_MemToReg: in std_logic;
-			MEM_MemDataOut: in std_logic_vector(31 downto 0);
-			MEM_ALUresult: in std_logic_vector(31 downto 0);
-			WB_MemToReg: out std_logic;
-			WB_MemDataOut: out std_logic_vector(31 downto 0);
-			WB_ALUresult: out std_logic_vector(31 downto 0)
+			MEM_WB_IN: in MEM_WB_signals;
+			MEM_WB_OUT: out MEM_WB_signals;
 		);
 	end component;
 	
-	signal opcode: std_logic_vector(5 downto 0);
-	signal ALUsrc: std_logic := '0';
-	signal ALUop: std_logic_vector(3 downto 0) := (others => '0');
-	signal RegDst: std_logic := '0';
-
-	signal clk: std_logic := '0';
-	signal reset: std_logic := '1';
-	signal PCin: std_logic_vector(31 downto 0) := (others => '0');
-	signal PCout: std_logic_vector(31 downto 0) := (others => '0');
-	signal pcSrc: std_logic := '0';
-	signal addressMem: std_logic_vector(31 downto 0) := (others => '0');
-	signal instructionMem: std_logic_vector(31 downto 0) := (others => '0');
-	signal IF_PC: std_logic_vector(31 downto 0) := (others => '0');
-	signal IF_Instruction: std_logic_vector(31 downto 0) := (others => '0');
-	signal ID_PC: std_logic_vector(31 downto 0) := (others => '0');
-	signal ID_Instruction: std_logic_vector(31 downto 0) := (others => '0');
-	signal addOne: std_logic_vector(31 downto 0) := (0 => '1', others => '0');
-	signal zeros: std_logic_vector(5 downto 0) := (others => '0');
-
-	signal RegWrite: std_logic := '0';
-	signal write_data: std_logic_vector(31 downto 0);
-	signal read_address1: std_logic_vector(4 downto 0);
-	signal read_address2: std_logic_vector(4 downto 0);
-	signal write_address: std_logic_vector(4 downto 0);
-	signal read_data1: std_logic_vector(31 downto 0);
-	signal read_data2: std_logic_vector(31 downto 0);
-	
-	
-	signal CU_MemToReg: std_logic := '0';
-	signal CU_MemRead: std_logic := '0';
-	signal CU_MemWrite: std_logic := '0';
-	signal MemToReg: std_logic := '0';
-	signal MemRead: std_logic := '0';
-	signal MemWrite: std_logic := '0';
-	signal Branch: std_logic := '0';
-	
-	signal ID_ReadData1: std_logic_vector(31 downto 0) := (others => '0');
-	signal ID_ReadData2: std_logic_vector(31 downto 0) := (others => '0');
-	signal ID_SignExtImm: std_logic_vector(31 downto 0) := (others => '0');
-	signal ID_RegAddr1: std_logic_vector(4 downto 0) := (others => '0');
-	signal ID_RegAddr2: std_logic_vector(4 downto 0) := (others => '0');
-	signal ID_PCSrc: std_logic := '0';
-	signal ID_RegDst: std_logic := '0';
-	signal ID_ALUsrc: std_logic := '0';
-	signal ID_MemToReg: std_logic := '0';
-	signal ID_RegWrite: std_logic := '0';
-	signal ID_MemRead: std_logic := '0';
-	signal ID_MemWrite: std_logic := '0';
-	signal ID_Branch: std_logic := '0';
-	signal ID_ALUop: std_logic_vector(3 downto 0) := (others => '0');
-	signal EX_PC: std_logic_vector(31 downto 0) := (others => '0');
-	signal EX_zero: std_logic := '0';
-	signal EX_Instruction: std_logic_vector(31 downto 0) := (others => '0');
-	signal EX_ReadData1: std_logic_vector(31 downto 0) := (others => '0');
-	signal EX_ReadData2: std_logic_vector(31 downto 0) := (others => '0');
-	signal EX_SignExtImm: std_logic_vector(31 downto 0) := (others => '0');
-	signal EX_RegAddr1: std_logic_vector(4 downto 0) := (others => '0');
-	signal EX_RegAddr2: std_logic_vector(4 downto 0) := (others => '0');
-	signal EX_PCSrc: std_logic := '0';
-	signal EX_RegDst: std_logic := '0';
-	signal EX_ALUsrc: std_logic := '0';
-	signal EX_MemToReg: std_logic := '0';
-	signal EX_RegWrite: std_logic := '0';
-	signal EX_MemRead: std_logic := '0';
-	signal EX_MemWrite: std_logic := '0';
-	signal EX_Branch: std_logic := '0';
-	signal EX_ALUop: std_logic_vector(3 downto 0) := (others => '0');
-	signal opA, opB: std_logic_vector(31 downto 0) := (others => '0');
-	signal funct: std_logic_vector(3 downto 0) := (others => '0');
-	signal ALUout: std_logic_vector(31 downto 0) := (others => '0');
-	signal carryOut: std_logic := '0';
-	signal zero: std_logic := '0';
-	signal EX_ALUresult: std_logic_vector(31 downto 0) := (others => '0');
-	signal EX_DestReg: std_logic_vector(4 downto 0) := (others => '0');
-	signal MEM_zero: std_logic := '0';
-	signal MEM_ALUresult: std_logic_vector(31 downto 0) := (others => '0');
-	signal MEM_ReadData2: std_logic_vector(31 downto 0) := (others => '0');
-	signal MEM_MemRead: std_logic := '0';
-	signal MEM_MemWrite: std_logic := '0';
-	signal MEM_MemToReg: std_logic := '0';
-	signal MEM_Branch: std_logic := '0';
-	signal MEM_DestReg: std_logic_vector(4 downto 0) := (others => '0');
-	
-	signal addr: std_logic_vector(31 downto 0) := (others => '0');
-	signal data_in: std_logic_vector(31 downto 0) := (others => '0');
-	signal data_out: std_logic_vector(31 downto 0) := (others => '0');
-	
-	signal MEM_MemDataOut: std_logic_vector(31 downto 0) := (others => '0');
-	signal WB_MemToReg: std_logic := '0';
-	signal WB_MemDataOut: std_logic_vector(31 downto 0) := (others => '0');
-	signal WB_ALUresult: std_logic_vector(31 downto 0) := (others => '0');
 	
 begin
 
@@ -270,12 +184,8 @@ begin
 		Port map (
 			clk => clk,
 			reset => reset,
-			MEM_MemToReg => MEM_MemToReg,
-			MEM_MemDataOut => MEM_MemDataOut,
-			MEM_ALUresult => MEM_ALUresult,
-			WB_MemToReg => WB_MemToReg,
-			WB_MemDataOut => WB_MemDataOut,
-			WB_ALUresult => WB_ALUresult
+			MEM_WB_IN => MEM_WB,
+			MEM_WB_OUT => MEM_WB
 		);
 	uut_DM: DataMemory
 		Port map (
@@ -451,7 +361,9 @@ begin
 	MemToReg <= WB_MemToReg;
 	MemWrite <= MEM_MemWrite;
 	write_data <= WB_ALUresult when MemToReg = '0' else WB_MemDataOut when MemToReg = '1';
-	data_in <= MEM_ALUresult;
+	data_in <= MEM_ALUresult when MemWrite = '1' else read_data2 when MemWrite = '0';
 	MEM_MemDataOut <= data_out;
 	ID_Branch <= Branch;
+	opA <= EX_ReadData1;
+	opB <= EX_ReadData2 when EX_ALUsrc = '0' else zeros_1 & EX_Instruction(15 downto 0) when EX_ALUsrc = '1';
 end Behavioral;																																							
