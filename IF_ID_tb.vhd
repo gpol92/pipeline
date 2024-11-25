@@ -6,34 +6,13 @@ use work.ControlUnitSignals.all;
 use work.ALUSignals.all;
 use work.MEM_WB_signals.all;
 use work.EX_MEM_signals.all;
+use work.ID_EX_signals.all;
+use work.IF_ID_signals.all;
 
 entity IF_ID_tb is
 end IF_ID_tb;
 
 architecture Behavioral of IF_ID_tb is
-	
-	type IF_ID_signals is record
-		PC: std_logic_vector(31 downto 0);
-		instruction: std_logic_vector(31 downto 0);
-	end record;
-	
-	type ID_EX_signals is record
-		PC: std_logic_vector(31 downto 0);
-		instruction: std_logic_vector(31 downto 0);
-		ReadData1: std_logic_vector(31 downto 0);
-		ReadData2: std_logic_vector(31 downto 0);
-		SignExtImm: std_logic_vector(31 downto 0);
-		RegAddr1: std_logic_vector(4 downto 0);
-		RegAddr2: std_logic_vector(4 downto 0);
-		RegDst: std_logic;
-		ALUsrc: std_logic;
-		MemToReg: std_logic;
-		RegWrite: std_logic;
-		MemRead: std_logic;
-		MemWrite: std_logic;
-		Branch: std_logic;
-		ALUop: std_logic_vector(3 downto 0);
-	end record;
 	
 	component PC 
 		Port (
@@ -243,9 +222,12 @@ begin
 	IF_ID_sig.instruction <= instructionMem;
 	ID_EX_sig.RegAddr1 <= IF_ID_sig.instruction(20 downto 16);
 	ID_EX_sig.RegAddr2 <= IF_ID_sig.instruction(15 downto 11);
+	RB_sig.write_address <= IF_ID_sig.instruction(20 downto 16) when ID_EX_sig.RegDst = '0' else IF_ID_sig.instruction(15 downto 11) when ID_EX_sig.RegDst = '1';
 	pcSrc <= EX_MEM_sig.Branch and EX_MEM_sig.zero;
 	RB_sig.write_data <= MEM_WB_sig.MemDataOut when MEM_WB_sig.MemToReg = '0' else EX_MEM_sig.ALUresult;
+	RB_sig.RegWrite <= MEM_WB_sig.RegWrite;
 	MEM_WB_sig.MemToReg <= CU_sig.CU_MemToReg;
+	ALU_sig.opA <= RB_sig.read_data1;
 end Behavioral;																								
 
 	

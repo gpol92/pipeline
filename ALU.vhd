@@ -1,16 +1,12 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-
+use work.ALUSignals.all;
 
 entity ALU is
 	Port (
-		opA, opB: in std_logic_vector(31 downto 0);
-		ALUop: in std_logic_vector(3 downto 0);
-		funct: in std_logic_vector(3 downto 0);
-		ALUout: out std_logic_vector(31 downto 0);
-		carryOut: out std_logic;
-		zero: out std_logic
+		ALU_IN: in ALUSignals;
+		ALU_OUT: out ALUSignals
 	);
 end ALU;
 
@@ -19,30 +15,30 @@ architecture Behavioral of ALU is
 	signal tmp: std_logic_vector(32 downto 0);
 
 begin
-	process(opA, opB, ALUop, funct)
+	process(ALU_IN.opA, ALU_IN.opB, ALU_IN.ALUop, ALU_IN.funct)
 	begin
-		zero <= '0';
-		case(ALUop) is
+		ALU_OUT.zero <= '0';
+		case(ALU_IN.ALUop) is
 			when "0000" =>
-				ALUresult <= opA;
+				ALUresult <= ALU_IN.opA;
 			when "0001" =>
-				ALUresult <= std_logic_vector(signed(opA) + signed(opB));
+				ALUresult <= std_logic_vector(signed(ALU_IN.opA) + signed(ALU_IN.opB));
 			when "0010" =>
-				if funct = "0010" then
-					ALUresult <= std_logic_vector(signed(opA) + signed(opB));
-				elsif funct = "0011" then
-					ALUresult <= std_logic_vector(signed(opA) - signed(opB));
+				if ALU_IN.funct = "0010" then
+					ALUresult <= std_logic_vector(signed(ALU_IN.opA) + signed(ALU_IN.opB));
+				elsif ALU_IN.funct = "0011" then
+					ALUresult <= std_logic_vector(signed(ALU_IN.opA) - signed(ALU_IN.opB));
 				end if;
 			when "0011" =>
-				if opA = opB then
-					zero <= '1';
+				if ALU_IN.opA = ALU_IN.opB then
+					ALU_OUT.zero <= '1';
 				else 
-					zero <= '0';
+					ALU_OUT.zero <= '0';
 				end if;
 			when others => ALUresult <= (others => '0');
 		end case;
 	end process;
-	ALUout <= ALUresult;
-	tmp <= std_logic_vector(signed('0' & opA) + signed('0' & opB));
-	carryOut <= tmp(32);
+	ALU_OUT.ALUout <= ALUresult;
+	tmp <= std_logic_vector(signed('0' & ALU_IN.opA) + signed('0' & ALU_IN.opB));
+	ALU_OUT.carryOut <= tmp(32);
 end Behavioral;

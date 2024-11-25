@@ -1,21 +1,14 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+use work.ControlUnitSignals.all;
 
 entity ControlUnit is
     Port (
         clk: in std_logic;
         reset: in std_logic;
-        opcode: in std_logic_vector(5 downto 0);
-        zero: in std_logic;
-        ALUsrc: out std_logic;
-        ALUop: out std_logic_vector(3 downto 0);
-        RegDst: out std_logic;
-        RegWrite: out std_logic;
-        CU_MemToReg: out std_logic;
-        CU_MemRead: out std_logic;
-        CU_MemWrite: out std_logic;
-        Branch: out std_logic
+        CU_IN: in ControlUnitSignals;
+		CU_OUT: out ControlUnitSignals
     );
 end ControlUnit;
 
@@ -42,92 +35,92 @@ begin
         end if;
     end process;
 
-    process(currentState, opcode, zero) 
+    process(currentState, CU_IN.opcode, CU_IN.zero) 
     begin
         case currentState is
             when FETCH =>
-                ALUsrc <= 'X';
-                ALUop <= "0000";
-                RegDst <= 'X';
-                RegWrite <= '0';
+                CU_OUT.ALUsrc <= 'X';
+                CU_OUT.ALUop <= "0000";
+                CU_OUT.RegDst <= 'X';
+                CU_OUT.RegWrite <= '0';
                 nextState <= DECODE;
             when DECODE => 
-                case opcode is    
+                case CU_IN.opcode is    
                     when immOp =>
-                        ALUsrc <= '1';
-                        ALUop <= "0001";
-                        RegDst <= '0';
-                        RegWrite <= '1';
-                        CU_MemRead <= 'X';
-                        CU_MemToReg <= 'X';
-                        CU_MemWrite <= 'X';
-                        Branch <= 'X';
+                        CU_OUT.ALUsrc <= '1';
+                        CU_OUT.ALUop <= "0001";
+                        CU_OUT.RegDst <= '0';
+                        CU_OUT.RegWrite <= '1';
+                        CU_OUT.CU_MemRead <= 'X';
+                        CU_OUT.CU_MemToReg <= 'X';
+                        CU_OUT.CU_MemWrite <= 'X';
+                        CU_OUT.Branch <= 'X';
                     when arithOp =>
-                        ALUsrc <= '0';
-                        ALUop <= "0010";
-                        RegDst <= '1';
-                        RegWrite <= '1';
-                        CU_MemRead <= '0';
-                        CU_MemToReg <= '0';
-                        CU_MemWrite <= '0';
-                        Branch <= '0';
+                        CU_OUT.ALUsrc <= '0';
+                        CU_OUT.ALUop <= "0010";
+                        CU_OUT.RegDst <= '1';
+                        CU_OUT.RegWrite <= '1';
+                        CU_OUT.CU_MemRead <= '0';
+                        CU_OUT.CU_MemToReg <= '0';
+                        CU_OUT.CU_MemWrite <= '0';
+                        CU_OUT.Branch <= '0';
                     when loadOp =>
-                        ALUsrc <= '1';
-                        ALUop <= "0010";
-                        RegDst <= '0';
-                        RegWrite <= '1';
-                        CU_MemRead <= '1';
-                        CU_MemToReg <= '1';
-                        CU_MemWrite <= '0';
+                        CU_OUT.ALUsrc <= '1';
+                        CU_OUT.ALUop <= "0010";
+                        CU_OUT.RegDst <= '0';
+                        CU_OUT.RegWrite <= '1';
+                        CU_OUT.CU_MemRead <= '1';
+                        CU_OUT.CU_MemToReg <= '1';
+                        CU_OUT.CU_MemWrite <= '0';
                     when storeOp =>
-                        ALUsrc <= '1';
-                        ALUop <= "0010";
-                        RegDst <= 'X';
-                        RegWrite <= '0';
-                        CU_MemRead <= '0';
-                        CU_MemToReg <= 'X';
-                        CU_MemWrite <= '1';
-                        Branch <= '0';
+                        CU_OUT.ALUsrc <= '1';
+                        CU_OUT.ALUop <= "0010";
+                        CU_OUT.RegDst <= 'X';
+                        CU_OUT.RegWrite <= '0';
+                        CU_OUT.CU_MemRead <= '0';
+                        CU_OUT.CU_MemToReg <= 'X';
+                        CU_OUT.CU_MemWrite <= '1';
+                        CU_OUT.Branch <= '0';
                     when bneOp =>
-                        ALUop <= "0011";
-                        ALUsrc <= '0';
-                        RegDst <= 'X';
-                        RegWrite <= '0';
-                        CU_MemRead <= '0';
-                        CU_MemToReg <= '0';
-                        CU_MemWrite <= '0';
-                        Branch <= not zero;
+                        CU_OUT.ALUop <= "0011";
+                        CU_OUT.ALUsrc <= '0';
+                        CU_OUT.RegDst <= 'X';
+                        CU_OUT.RegWrite <= '0';
+                        CU_OUT.CU_MemRead <= '0';
+                        CU_OUT.CU_MemToReg <= '0';
+                        CU_OUT.CU_MemWrite <= '0';
+                        CU_OUT.Branch <= not CU_OUT.zero;
                     when beqOp =>
-                        ALUop <= "0011";
-                        ALUsrc <= '0';
-                        RegDst <= 'X';
-                        RegWrite <= '0';
-                        CU_MemRead <= '0';
-                        CU_MemToReg <= '0';
-                        CU_MemWrite <= '0';
-                        Branch <= zero;
+                        CU_OUT.ALUop <= "0011";
+                        CU_OUT.ALUsrc <= '0';
+                        CU_OUT.RegDst <= 'X';
+                        CU_OUT.RegWrite <= '0';
+                        CU_OUT.CU_MemRead <= '0';
+                        CU_OUT.CU_MemToReg <= '0';
+                        CU_OUT.CU_MemWrite <= '0';
+                        CU_OUT.Branch <= CU_OUT.zero;
                     when others =>
-                        ALUsrc <= 'X';
-                        ALUop <= "0000";
-                        RegDst <= 'X';
-                        RegWrite <= '0';
-                        CU_MemRead <= '0';
-                        CU_MemToReg <= 'X';
-                        CU_MemWrite <= '0';
+                        CU_OUT.ALUsrc <= 'X';
+                        CU_OUT.ALUop <= "0000";
+                        CU_OUT.RegDst <= 'X';
+                        CU_OUT.RegWrite <= '0';
+                        CU_OUT.CU_MemRead <= '0';
+                        CU_OUT.CU_MemToReg <= 'X';
+                        CU_OUT.CU_MemWrite <= '0';
                 end case;
                 nextState <= EXECUTE;
             when EXECUTE =>
-                RegWrite <= '1';
+                CU_OUT.RegWrite <= '1';
                 nextState <= MEMORY;
             when MEMORY =>
                 nextState <= WRITE_BACK;
             when WRITE_BACK =>
                 nextState <= FETCH;
             when others =>
-                ALUsrc <= 'X';
-                ALUop <= "0000";
-                RegDst <= 'X';
-                RegWrite <= '0';
+                CU_OUT.ALUsrc <= 'X';
+                CU_OUT.ALUop <= "0000";
+                CU_OUT.RegDst <= 'X';
+                CU_OUT.RegWrite <= '0';
                 nextState <= FETCH;
         end case;
     end process;
