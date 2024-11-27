@@ -228,7 +228,10 @@ begin
 	RB_sig.RegWrite <= MEM_WB_sig.RegWrite;
 	MEM_WB_sig.MemToReg <= CU_sig.CU_MemToReg;
 	ALU_sig.opA <= RB_sig.read_data1;
-	ALU_sig.opB <= RB_sig.read_data2 when EX_MEM_OUT.ALUsrc = '0' else "0000000000000000" & ID_EX_sig.instruction(15 downto 0) when EX_MEM_OUT.ALusrc = '1'; 
+	ALU_sig.opB <= RB_sig.read_data2 when EX_MEM_sig.ALUsrc = '0' else "0000000000000000" & ID_EX_sig.instruction(15 downto 0) when EX_MEM_sig.ALUsrc = '1'; 
+	ALU_sig.funct <= ID_EX_sig.instruction(3 downto 0) when EX_MEM_sig.ALUsrc = '0' else (others => 'Z');
+	EX_MEM_sig.zero <= ALU_sig.zero;
+	ALU_sig.ALUop <= ID_EX_sig.ALUop;
 end Behavioral;																								
 
 	
