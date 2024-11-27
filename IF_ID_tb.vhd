@@ -197,7 +197,6 @@ begin
 			EX_MEM_IN => EX_MEM_sig,
 			EX_MEM_OUT => EX_MEM_sig
 		);
-		
 
 	process
 	begin
@@ -224,7 +223,7 @@ begin
 	ID_EX_sig.RegAddr2 <= IF_ID_sig.instruction(15 downto 11);
 	RB_sig.write_address <= IF_ID_sig.instruction(20 downto 16) when ID_EX_sig.RegDst = '0' else IF_ID_sig.instruction(15 downto 11) when ID_EX_sig.RegDst = '1';
 	pcSrc <= EX_MEM_sig.Branch and EX_MEM_sig.zero;
-	RB_sig.write_data <= MEM_WB_sig.MemDataOut when MEM_WB_sig.MemToReg = '0' else EX_MEM_sig.ALUresult;
+	RB_sig.write_data <= MEM_WB_sig.MemDataOut when MEM_WB_sig.MemToReg = '0' else EX_MEM_sig.ALUresult when MEM_WB_sig.MemToReg = '1';
 	RB_sig.RegWrite <= MEM_WB_sig.RegWrite;
 	MEM_WB_sig.MemToReg <= CU_sig.CU_MemToReg;
 	ALU_sig.opA <= RB_sig.read_data1;
@@ -232,6 +231,9 @@ begin
 	ALU_sig.funct <= ID_EX_sig.instruction(3 downto 0) when EX_MEM_sig.ALUsrc = '0' else (others => 'Z');
 	EX_MEM_sig.zero <= ALU_sig.zero;
 	ALU_sig.ALUop <= ID_EX_sig.ALUop;
+	EX_MEM_sig.ALUresult <= ALU_sig.ALUout;
+	addr <= EX_MEM_sig.ALUresult;
+	data_out <= MEM_WB_sig.MemDataOut;
 end Behavioral;																								
 
 	
