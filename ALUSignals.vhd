@@ -12,4 +12,21 @@ package ALUSignals is
 		carryOut: std_logic;
 		zero: std_logic;
 	end record;
+	
+	procedure init_ALU_all(signal sig : inout ALUSignals);
 end ALUsignals;
+
+package body ALUSignals is 
+	procedure init_ALU_all(signal sig : inout ALUSignals) is
+        variable temp : ALUSignals; -- Variabile temporanea
+    begin
+        temp.opA := (others => '0');
+        temp.opB := (others => '0');
+        temp.ALUop := (others => '0');
+        temp.funct := (others => '0');
+        temp.ALUout := (others => '0');
+        temp.carryOut := '0';
+        temp.zero := '0';
+        sig <= temp; -- Assegna la variabile al segnale
+    end procedure;
+end ALUSignals;

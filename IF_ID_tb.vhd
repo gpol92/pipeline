@@ -126,7 +126,15 @@ architecture Behavioral of IF_ID_tb is
 	signal RB_sig: RegisterBankSignals;
 	signal CU_sig: ControlUnitSignals;
 	signal ALU_sig: ALUSignals;
+	
+	
 begin
+	process 
+	begin
+		init_ALU_all(ALU_sig);
+		init_IF_ID_all(IF_ID_sig);
+		wait;
+	end process;
 
 	uut_MEM_WB: MEM_WB
 		Port map (
@@ -213,6 +221,7 @@ begin
 		reset <= '0';
 		wait;
 	end process;
+
 	
 	CU_sig.opcode <= IF_ID_sig.instruction(31 downto 26);
 	addressMem <= PCout;

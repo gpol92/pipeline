@@ -14,4 +14,10 @@ package EX_MEM_signals is
 		MemToReg: std_logic;
 		Branch: std_logic;
 	end record;
+	
+	procedure init_EX_MEM_all(signal sig: EX_MEM_signals);
 end EX_MEM_signals;
+
+package body EX_MEM_signals is
+	procedure init_EX_MEM_all(signal sig: EX_MEM_signals) is
+		
