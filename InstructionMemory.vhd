@@ -1,18 +1,40 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+use work.R_Instruction.all;
 
 entity InstructionMemory is
-	Port (
-		clk: in std_logic;
-		addressMem: in std_logic_vector(31 downto 0);
-		instructionMem: out std_logic_vector(31 downto 0) := (others => '0')
-	);
+    Port (
+        clk: in std_logic;
+        addressMem: in std_logic_vector(31 downto 0);
+        instructionMem: out std_logic_vector(31 downto 0) := (others => '0')
+    );
 end InstructionMemory;
 
 architecture Behavioral of InstructionMemory is
-	type memory_array is array (0 to 255) of std_logic_vector(31 downto 0);
-	signal memory: memory_array := (
+    type memory_array is array (0 to 255) of std_logic_vector(31 downto 0);
+    signal instr_mem: memory_array := (others => (others => '0'));
+begin
+    -- Inizializza le istruzioni
+    process
+    begin
+        load_R_instruction(instr_mem, 0, "000001", "00000", "10000", "00000", "0000000000000100");
+        load_R_instruction(instr_mem, 1, "000001", "00000", "10001", "00000", "0000000000000101");
+        wait; -- Termina inizializzazione
+    end process;
+
+    -- Gestione memoria
+    process(clk)
+    begin
+        if rising_edge(clk) then
+            instructionMem <= instr_mem(to_integer(unsigned(addressMem(7 downto 0))));
+        end if;
+    end process;
+end Behavioral;
+
+
+
+/* signal memory: memory_array := (
 		0 => b"00000100000100000000000000000100", -- addi r15, r0, 4
 		1 => b"00000100000100010000000000000101", -- addi r16, r0, 5
 		2 => b"00001010000100011001000000000010", -- add r17, r16, r15
@@ -24,14 +46,4 @@ architecture Behavioral of InstructionMemory is
 		8 => b"00010110000100111111111111111000", -- bne r15, r17, -8
 		9 => b"00011100000000000000000000000001", -- jump 1
 		others => b"00000000000000000000000000000000"
-	);
-begin
-	process(clk)
-	begin
-		if rising_edge(clk) then
-			instructionMem <= memory(to_integer(unsigned(addressMem)));
-		else 	
-			instructionMem <= instructionMem;
-		end if;
-	end process;
-end Behavioral;
+	); */
