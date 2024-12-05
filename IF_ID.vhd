@@ -1,15 +1,14 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+use work.IF_ID_signals.all;
 
 entity IF_ID is
 	Port (
 		clk: in std_logic;
 		reset : in std_logic;
-        IF_PC : in std_logic_vector(31 downto 0);
-        IF_Instruction : in std_logic_vector(31 downto 0);
-        ID_PC : out std_logic_vector(31 downto 0);
-        ID_Instruction : out std_logic_vector(31 downto 0)
+        IF_ID_IN: in IF_ID_signals;
+		IF_ID_OUT: out IF_ID_signals
     );
 end IF_ID;
 
@@ -23,11 +22,11 @@ begin
 			PC_reg <= (others => '0');
 			Instruction_reg <= (others => '0');
 		elsif rising_edge(clk) then
-			PC_reg <= IF_PC;
-			Instruction_reg <= IF_Instruction;
+			PC_reg <= IF_ID_IN.PC;
+			Instruction_reg <= IF_ID_IN.instruction;
 		end if;
 	end process;
 	
-	ID_PC <= PC_reg;
-	ID_Instruction <= Instruction_reg;
+	IF_ID_OUT.PC <= PC_reg;
+	IF_ID_OUT.instruction <= Instruction_reg;
 end Behavioral;

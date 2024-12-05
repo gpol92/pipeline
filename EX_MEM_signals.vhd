@@ -15,9 +15,15 @@ package EX_MEM_signals is
 		Branch: std_logic;
 	end record;
 	
-	procedure init_EX_MEM_all(signal sig: EX_MEM_signals);
+	constant EX_MEM_sig: EX_MEM_signals := (
+		zero => '0',
+		ALUresult => (others => '0'),
+		ALUsrc => '0',
+		ReadData2 => (others => '0'),
+		DestReg => (others => '0'),
+		MemRead => '0',
+		MemWrite => '0',
+		MemToReg => '0',
+		Branch => '0'
+	);
 end EX_MEM_signals;
-
-package body EX_MEM_signals is
-	procedure init_EX_MEM_all(signal sig: EX_MEM_signals) is
-		
