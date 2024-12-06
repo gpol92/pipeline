@@ -12,18 +12,67 @@ entity InstructionMemory is
 end InstructionMemory;
 
 architecture Behavioral of InstructionMemory is
-    type memory_array is array (0 to 255) of std_logic_vector(31 downto 0);
-    signal instr_mem: memory_array := (others => (others => '0'));
+    type instruction_memory is array (0 to 255) of std_logic_vector(31 downto 0);
+    signal instr_mem: instruction_memory := (others => (others => '0'));
+    
+    -- Procedura per caricare le istruzioni
+    procedure load_R_instrucion (
+        signal mem: inout instruction_memory;
+        opcode: std_logic_vector(5 downto 0);
+        sourceReg1: std_logic_vector(4 downto 0);
+        sourceReg2: std_logic_vector(4 downto 0);
+        writeReg: std_logic_vector(4 downto 0);
+        shiftAmount: std_logic_vector(4 downto 0);
+        funct: std_logic_vector(5 downto 0);
+        address: integer
+    ) is
+        variable instr: std_logic_vector(31 downto 0);
+    begin
+        instr := opcode & sourceReg1 & sourceReg2 & writeReg & shiftAmount & funct;
+        mem(address) <= instr;
+    end procedure;
+	
+	procedure load_I_instruction (
+		signal mem: inout instruction_memory;
+		opcode: in std_logic_vector(5 downto 0);
+		sourceReg1: in std_logic_vector(4 downto 0);
+		writeReg: in std_logic_vector(4 downto 0);
+		immediate: in std_logic_vector(15 downto 0);
+		address: integer
+	)	
+	is
+		variable instr: std_logic_vector(31 downto 0);
+	begin
+		instr := opcode & sourceReg1 & writeReg & immediate;
+		mem(address) <= instr;
+	end procedure;
+	
 begin
-    -- Inizializza le istruzioni
+    -- Caricamento iniziale delle istruzioni nella memoria
     process
     begin
-        load_R_instruction(instr_mem, 0, "000001", "00000", "10000", "00000", "0000000000000100");
-        load_R_instruction(instr_mem, 1, "000001", "00000", "10001", "00000", "0000000000000101");
-        wait; -- Termina inizializzazione
+        -- Chiama la procedura passando esplicitamente il segnale instr_mem
+		load_I_instruction(
+			mem => instr_mem,
+			opcode => "000001",
+			sourceReg1 => "00000",
+			writeReg => "10000",
+			immediate => "0000000000000100",
+			address => 0
+		);
+		
+		load_I_instruction(
+			mem => instr_mem,
+			opcode => "000001",
+			sourceReg1 => "00000",
+			writeReg => "10001",
+			immediate => "0000000000000101",
+			address => 1
+		);
+        wait; -- Per interrompere il processo
     end process;
 
-    -- Gestione memoria
+    -- Gestione lettura memoria
     process(clk)
     begin
         if rising_edge(clk) then
