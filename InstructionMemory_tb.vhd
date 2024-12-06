@@ -26,5 +26,17 @@ begin
 			addressMem => addressMem,
 			instructionMem => instructionMem
 		);
-		
+	process
+	begin
+		clk <= '0';
+		wait for 10 ns;
+		clk <= '1';
+	end process;
+	
+	process
+		addressMem <= std_logic_vector(to_unsigned(1, 32));
+		wait for 20 ns; 
+		addressMem <= std_logic_vector(to_unsigned(2, 32));
+		wait;
+	end process;
 end Behavioral;
