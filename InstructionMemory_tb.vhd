@@ -17,7 +17,7 @@ architecture Behavioral of InstructionMemory_tb is
 	end component;
 	
 	signal clk: std_logic := '0';
-	signal addressMem: std_logic_vector(31 downto 0);
+	signal addressMem: std_logic_vector(31 downto 0) := (others => '0');
 	signal instructionMem: std_logic_vector(31 downto 0);
 begin
 	uut_IM: InstructionMemory
@@ -34,6 +34,7 @@ begin
 	end process;
 	
 	process
+	begin
 		addressMem <= std_logic_vector(to_unsigned(1, 32));
 		wait for 20 ns; 
 		addressMem <= std_logic_vector(to_unsigned(2, 32));
