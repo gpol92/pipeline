@@ -16,7 +16,7 @@ architecture Behavioral of InstructionMemory is
     signal instr_mem: instruction_memory := (others => (others => '0'));
     
     -- Procedura per caricare le istruzioni
-    procedure load_R_instrucion (
+    procedure load_R_instruction (
         signal mem: inout instruction_memory;
         opcode: std_logic_vector(5 downto 0);
         sourceReg1: std_logic_vector(4 downto 0);
@@ -69,6 +69,46 @@ begin
 			immediate => "0000000000000101",
 			address => 1
 		);
+		
+		load_R_instruction(
+			mem => instr_mem,
+			opcode => "000010",
+			sourceReg1 => "10000",
+			sourceReg2 => "10001",
+			writeReg => "10010",
+			shiftAmount => "00000",
+			funct => "000010",
+			address => 2
+		);
+
+		load_R_instruction(
+			mem => instr_mem,
+			opcode => "000010",
+			sourceReg1 => "10000",
+			sourceReg2 => "10001",
+			writeReg => "10011",
+			shiftAmount => "00000",
+			funct => "000011",
+			address => 3
+		);	
+		
+		load_I_instruction(
+			mem => instr_mem,
+			opcode => "000001",
+			sourceReg1 => "00000",
+			writeReg => "01110",
+			immediate => std_logic_vector(to_unsigned(1, 16)),
+			address => 4
+		);
+		
+		load_I_instruction(
+			mem => instr_mem,
+			opcode => "000001",
+			sourceReg1 => "00000",
+			writeReg => "01111",
+			immediate => std_logic_vector(to_unsigned(1, 16)),
+			address => 5
+		);
         wait; -- Per interrompere il processo
     end process;
 
@@ -76,7 +116,7 @@ begin
     process(clk)
     begin
         if rising_edge(clk) then
-            instructionMem <= instr_mem(to_integer(unsigned(addressMem(7 downto 0))));
+            instructionMem <= instr_mem(to_integer(unsigned(addressMem)));
         end if;
     end process;
 end Behavioral;

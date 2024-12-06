@@ -31,13 +31,22 @@ begin
 		clk <= '0';
 		wait for 10 ns;
 		clk <= '1';
+		wait for 10 ns;
 	end process;
 	
 	process
 	begin
+		addressMem <= std_logic_vector(to_unsigned(0, 32));
+		wait for 20 ns;
 		addressMem <= std_logic_vector(to_unsigned(1, 32));
 		wait for 20 ns; 
 		addressMem <= std_logic_vector(to_unsigned(2, 32));
+		wait for 20 ns;
+		addressMem <= std_logic_vector(to_unsigned(3, 32));
+		wait for 20 ns;
+		addressMem <= std_logic_vector(to_unsigned(4, 32));
+		wait for 20 ns;
+		addressMem <= std_logic_vector(to_unsigned(5, 32));
 		wait;
 	end process;
 end Behavioral;
