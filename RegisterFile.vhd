@@ -20,9 +20,7 @@ begin
 	begin
 		if reset = '1' then
 			-- Azzeramento di tutti i registri in caso di reset
-			for i in 0 to 31 loop
-				registers(i) <= (others => '0');
-			end loop;
+			registers <= (others => (others => '0'));
 		elsif rising_edge(clk) then
 			-- Scrittura nel registro selezionato se abilitata
 			if RB_IN.RegWrite = '1' and RB_IN.write_address /= "00000" then

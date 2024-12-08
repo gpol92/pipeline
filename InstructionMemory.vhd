@@ -6,6 +6,7 @@ use work.R_Instruction.all;
 entity InstructionMemory is
     Port (
         clk: in std_logic;
+		reset: in std_logic;
         addressMem: in std_logic_vector(31 downto 0);
         instructionMem: out std_logic_vector(31 downto 0) := (others => '0')
     );
@@ -113,9 +114,11 @@ begin
     end process;
 
     -- Gestione lettura memoria
-    process(clk)
+    process(clk, reset)
     begin
-        if rising_edge(clk) then
+		if reset = '1' then
+			instructionMem <= instr_mem(0);
+        elsif rising_edge(clk) then
             instructionMem <= instr_mem(to_integer(unsigned(addressMem)));
         end if;
     end process;
