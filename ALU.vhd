@@ -24,9 +24,9 @@ begin
 			when "0001" =>
 				ALUresult <= std_logic_vector(signed(ALU_IN.opA) + signed(ALU_IN.opB));
 			when "0010" =>
-				if ALU_IN.funct = "0010" then
+				if ALU_IN.funct = "000010" then
 					ALUresult <= std_logic_vector(signed(ALU_IN.opA) + signed(ALU_IN.opB));
-				elsif ALU_IN.funct = "0011" then
+				elsif ALU_IN.funct = "000011" then
 					ALUresult <= std_logic_vector(signed(ALU_IN.opA) - signed(ALU_IN.opB));
 				end if;
 			when "0011" =>
