@@ -161,7 +161,7 @@ begin
 		EX_MEM_IN.Branch <= ID_EX_OUT.Branch;
 		ALU_IN.ALUop <= ID_EX_OUT.ALUop;
 		ALU_IN.opA <= RB_OUT.read_data1;
-		ALU_IN.opB <= std_logic_vector(to_unsigned(0, 16)) & IF_ID_OUT.instruction(15 downto 0);
+		ALU_IN.opB <= std_logic_vector(to_unsigned(0, 16)) & IF_ID_OUT.instruction(15 downto 0) when ID_EX_OUT.ALUsrc = '1' else RB_OUT.read_data2;
 		ALU_IN.funct <= IF_ID_OUT.instruction(5 downto 0) when ID_EX_OUT.RegDst = '1' else "000000";
 		RB_IN.write_data <= ALU_OUT.ALUout;
 		PC_ID_EX_OUT <= unsigned(ID_EX_OUT.PC);
