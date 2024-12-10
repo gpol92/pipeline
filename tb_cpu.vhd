@@ -1,6 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+use work.PCSignals.all;
 use work.IF_ID_signals.all;
 use work.RegisterBankSignals.all;
 use work.ALUSignals.all;
@@ -22,15 +23,6 @@ architecture Behavioral of tb_cpu is
 		);
 	end component;
 	
-	component PC 
-		Port (
-			clk: in std_logic;
-			reset: in std_logic;
-			PCin: in std_logic_vector(31 downto 0);
-			PCout: out std_logic_vector(31 downto 0)
-		);
-	end component;
-	
 	signal clk: std_logic := '0';
 	signal reset: std_logic := '1';
 	signal pcSrc: std_logic := '0';
@@ -41,8 +33,9 @@ architecture Behavioral of tb_cpu is
 	signal addressMem: std_logic_vector(31 downto 0) := (others => '0');
 	signal instructionMem: std_logic_vector(31 downto 0) := (others => '0');
 	
-	signal PCin: std_logic_vector(31 downto 0) := (others => '0');
-	signal PCout: std_logic_vector(31 downto 0) := (others => '0');
+	signal PC_IN: PCSignals := initialPC;
+	signal PC_OUT: PCSignals;
+	
 	signal PC_ID_EX_OUT: unsigned(31 downto 0) := (others => '0');
 	signal jumpPC: std_logic_vector(31 downto 0) := (others => '0');
 	
@@ -69,12 +62,12 @@ begin
 			instructionMem => instructionMem
 		);
 		
-	uut_PC: PC
+	uut_PC: entity work.PC
 		Port map (
 			clk => clk,
 			reset => reset,
-			PCin => PCin,
-			PCout => PCout
+			PC_IN => PC_IN,
+			PC_OUT => PC_OUT
 		);
 		
 	uut_IF_ID: entity work.IF_ID
@@ -137,41 +130,46 @@ begin
 	
 	process
 	begin
-		addressMem <= PCout;
-		IF_ID_IN.PC <= PCout;
-		IF_ID_IN.instruction <= instructionMem;
-		CU_IN.opcode <= IF_ID_OUT.instruction(31 downto 26);
-		RB_IN.read_address1 <= IF_ID_OUT.instruction(25 downto 21);
-		RB_IN.read_address2 <= std_logic_vector(to_unsigned(0, 5));
-		RB_IN.write_address <= IF_ID_OUT.instruction(20 downto 16);
-		ID_EX_IN.ReadData1 <= RB_OUT.read_data1;
-		ID_EX_IN.ReadData2 <= RB_OUT.read_data2;
-		ID_EX_IN.RegAddr1 <= IF_ID_OUT.instruction(20 downto 16);
-		ID_EX_IN.RegAddr2 <= IF_ID_OUT.instruction(15 downto 11);
-		ID_EX_IN.RegDst <= CU_OUT.RegDst;
-		ID_EX_IN.ALUsrc <= CU_OUT.ALUsrc;
-		ID_EX_IN.MemToReg <= CU_OUT.MemToReg;
-		ID_EX_IN.RegWrite <= CU_OUT.RegWrite;
-		ID_EX_IN.MemRead <= CU_OUT.MemRead;
-		ID_EX_IN.MemWrite <= CU_OUT.MemWrite;
-		ID_EX_IN.Branch <= CU_OUT.Branch;
-		ID_EX_IN.ALUop <= CU_OUT.ALUop;
-		EX_MEM_IN.MemToReg <= ID_EX_OUT.MemToReg;
-		EX_MEM_IN.MemRead <= ID_EX_OUT.MemRead;
-		EX_MEM_IN.Branch <= ID_EX_OUT.Branch;
-		ALU_IN.ALUop <= ID_EX_OUT.ALUop;
-		ALU_IN.opA <= RB_OUT.read_data1;
-		ALU_IN.opB <= std_logic_vector(to_unsigned(0, 16)) & IF_ID_OUT.instruction(15 downto 0) when ID_EX_OUT.ALUsrc = '1' else RB_OUT.read_data2;
-		ALU_IN.funct <= IF_ID_OUT.instruction(5 downto 0) when ID_EX_OUT.RegDst = '1' else "000000";
-		RB_IN.write_data <= ALU_OUT.ALUout;
-		PC_ID_EX_OUT <= unsigned(ID_EX_OUT.PC);
-		jumpPC <= std_logic_vector(to_unsigned(0, 6)) & IF_ID_OUT.instruction(25 downto 0); 
-		PCin <= std_logic_vector(PC_ID_EX_OUT + 1) when pcSrc = '0' else std_logic_vector(PC_ID_EX_OUT + unsigned(jumpPC));
+		addressMem <= PC_OUT.PCout;
+		PC_IN.PCin <= std_logic_vector(unsigned(PC_OUT.PCout) + 1);
 		wait;
 	end process;
 end Behavioral;
 
-
+-- process
+	-- begin
+		-- addressMem <= PCout;
+		-- IF_ID_IN.PC <= PCout;
+		-- IF_ID_IN.instruction <= instructionMem;
+		-- CU_IN.opcode <= IF_ID_OUT.instruction(31 downto 26);
+		-- RB_IN.read_address1 <= IF_ID_OUT.instruction(25 downto 21);
+		-- RB_IN.read_address2 <= std_logic_vector(to_unsigned(0, 5));
+		-- RB_IN.write_address <= IF_ID_OUT.instruction(20 downto 16);
+		-- ID_EX_IN.ReadData1 <= RB_OUT.read_data1;
+		-- ID_EX_IN.ReadData2 <= RB_OUT.read_data2;
+		-- ID_EX_IN.RegAddr1 <= IF_ID_OUT.instruction(20 downto 16);
+		-- ID_EX_IN.RegAddr2 <= IF_ID_OUT.instruction(15 downto 11);
+		-- ID_EX_IN.RegDst <= CU_OUT.RegDst;
+		-- ID_EX_IN.ALUsrc <= CU_OUT.ALUsrc;
+		-- ID_EX_IN.MemToReg <= CU_OUT.MemToReg;
+		-- ID_EX_IN.RegWrite <= CU_OUT.RegWrite;
+		-- ID_EX_IN.MemRead <= CU_OUT.MemRead;
+		-- ID_EX_IN.MemWrite <= CU_OUT.MemWrite;
+		-- ID_EX_IN.Branch <= CU_OUT.Branch;
+		-- ID_EX_IN.ALUop <= CU_OUT.ALUop;
+		-- EX_MEM_IN.MemToReg <= ID_EX_OUT.MemToReg;
+		-- EX_MEM_IN.MemRead <= ID_EX_OUT.MemRead;
+		-- EX_MEM_IN.Branch <= ID_EX_OUT.Branch;
+		-- ALU_IN.ALUop <= ID_EX_OUT.ALUop;
+		-- ALU_IN.opA <= RB_OUT.read_data1;
+		-- ALU_IN.opB <= std_logic_vector(to_unsigned(0, 16)) & IF_ID_OUT.instruction(15 downto 0) when ID_EX_OUT.ALUsrc = '1' else RB_OUT.read_data2;
+		-- ALU_IN.funct <= IF_ID_OUT.instruction(5 downto 0) when ID_EX_OUT.RegDst = '1' else "000000";
+		-- RB_IN.write_data <= ALU_OUT.ALUout;
+		-- PC_ID_EX_OUT <= unsigned(ID_EX_OUT.PC);
+		-- jumpPC <= std_logic_vector(to_unsigned(0, 6)) & IF_ID_OUT.instruction(25 downto 0); 
+		-- PCin <= std_logic_vector(PC_ID_EX_OUT + 1) when pcSrc = '0' else std_logic_vector(PC_ID_EX_OUT + unsigned(jumpPC));
+		-- wait;
+	-- end process;
 
 -- library ieee;
 -- use ieee.std_logic_1164.all;
