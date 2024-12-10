@@ -6,6 +6,7 @@ use work.RegisterBankSignals.all;
 use work.ALUSignals.all;
 use work.ID_EX_signals.all;
 use work.ControlUnitSignals.all;
+use work.EX_MEM_signals.all;
 
 entity tb_cpu is
 end tb_cpu;
@@ -56,6 +57,9 @@ architecture Behavioral of tb_cpu is
 	
 	signal CU_IN: ControlUnitSignals;
 	signal CU_OUT: ControlUnitSignals;
+	
+	signal EX_MEM_IN: EX_MEM_signals;
+	signal EX_MEM_OUT: EX_MEM_signals;
 begin
 	uut_IM: InstructionMemory
 		Port map (
@@ -107,7 +111,15 @@ begin
 			CU_IN => CU_IN,
 			CU_OUT => CU_OUT
 		);
-		
+	
+	uut_EX_MEM: entity work.EX_MEM
+		Port map (
+			clk => clk,
+			reset => reset,
+			EX_MEM_IN => EX_MEM_IN,
+			EX_MEM_OUT => EX_MEM_OUT
+		);
+	
 	process
 	begin
 		clk <= '0';
@@ -144,6 +156,9 @@ begin
 		ID_EX_IN.MemWrite <= CU_OUT.MemWrite;
 		ID_EX_IN.Branch <= CU_OUT.Branch;
 		ID_EX_IN.ALUop <= CU_OUT.ALUop;
+		EX_MEM_IN.MemToReg <= ID_EX_OUT.MemToReg;
+		EX_MEM_IN.MemRead <= ID_EX_OUT.MemRead;
+		EX_MEM_IN.Branch <= ID_EX_OUT.Branch;
 		ALU_IN.ALUop <= ID_EX_OUT.ALUop;
 		ALU_IN.opA <= RB_OUT.read_data1;
 		ALU_IN.opB <= std_logic_vector(to_unsigned(0, 16)) & IF_ID_OUT.instruction(15 downto 0);
