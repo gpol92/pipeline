@@ -7,8 +7,8 @@ entity PC is
 	Port (
 		clk: in std_logic;
 		reset: in std_logic;
-		PC_IN: in PCSignals;
-		PC_OUT: out PCSignals
+		PC_IN: in PCInputs;
+		PC_OUT: out PCOutputs
 	);
 end PC;
 
@@ -18,10 +18,8 @@ begin
 	begin
 		if reset = '1' then
 			PC_OUT.PCout <= (others => '0');
-			PC_OUT.PCin <= (others => '0');
 		elsif clk'event and clk = '1' then
-			PC_OUT.PCin <= PC_IN.PCin;
-			PC_OUT.PCout <= PC_OUT.PCin;
+			PC_OUT.PCout <= PC_IN.PCin;
 		end if;
 	end process;
 end Behavioral;

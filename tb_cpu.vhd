@@ -33,8 +33,8 @@ architecture Behavioral of tb_cpu is
 	signal addressMem: std_logic_vector(31 downto 0) := (others => '0');
 	signal instructionMem: std_logic_vector(31 downto 0) := (others => '0');
 	
-	signal PC_IN: PCSignals := initialPC;
-	signal PC_OUT: PCSignals;
+	signal PC_IN: PCInputs := initialPCInputs;
+	signal PC_OUT: PCOutputs := initialPCOutputs;
 	
 	signal PC_ID_EX_OUT: unsigned(31 downto 0) := (others => '0');
 	signal jumpPC: std_logic_vector(31 downto 0) := (others => '0');
@@ -128,12 +128,36 @@ begin
 		wait;
 	end process;
 	
-	process
+	process(clk)
+		variable instructionCount: integer := 0;
 	begin
-		addressMem <= PC_OUT.PCout;
-		PC_IN.PCin <= std_logic_vector(unsigned(PC_OUT.PCout) + 1);
-		wait;
-	end process;
+		if rising_edge(clk) then
+			if reset = '0' then
+				if instructionCount < 10 then
+					addressMem <= PC_OUT.PCout;
+					IF_ID_IN.PC <= PC_OUT.PCout;
+					IF_ID_IN.instruction <= instructionMem;
+					PC_IN.PCin <= std_logic_vector(unsigned(PC_OUT.PCout) + 1);
+					ID_EX_IN.RegDst <= CU_OUT.RegDst;
+					ID_EX_IN.ALUsrc <= CU_OUT.ALUsrc;
+					ID_EX_IN.MemToReg <= CU_OUT.MemToReg;
+					ID_EX_IN.RegWrite <= CU_OUT.RegWrite;
+					ID_EX_IN.MemRead <= CU_OUT.MemRead;
+					ID_EX_IN.MemWrite <= CU_OUT.MemWrite;
+					ID_EX_IN.Branch <= CU_OUT.Branch;
+					ID_EX_IN.ALUop <= CU_OUT.ALUop;
+					EX_MEM_IN.MemToReg <= ID_EX_OUT.MemToReg;
+					EX_MEM_IN.MemRead <= ID_EX_OUT.MemRead;
+					EX_MEM_IN.Branch <= ID_EX_OUT.Branch;
+					instructionCount := instructionCount + 1;
+				end if;
+			else
+				-- Resetta il contatore quando il segnale reset è attivo
+				instructionCount := 0;
+			end if;
+		end if;
+end process;
+
 end Behavioral;
 
 -- process
@@ -149,14 +173,6 @@ end Behavioral;
 		-- ID_EX_IN.ReadData2 <= RB_OUT.read_data2;
 		-- ID_EX_IN.RegAddr1 <= IF_ID_OUT.instruction(20 downto 16);
 		-- ID_EX_IN.RegAddr2 <= IF_ID_OUT.instruction(15 downto 11);
-		-- ID_EX_IN.RegDst <= CU_OUT.RegDst;
-		-- ID_EX_IN.ALUsrc <= CU_OUT.ALUsrc;
-		-- ID_EX_IN.MemToReg <= CU_OUT.MemToReg;
-		-- ID_EX_IN.RegWrite <= CU_OUT.RegWrite;
-		-- ID_EX_IN.MemRead <= CU_OUT.MemRead;
-		-- ID_EX_IN.MemWrite <= CU_OUT.MemWrite;
-		-- ID_EX_IN.Branch <= CU_OUT.Branch;
-		-- ID_EX_IN.ALUop <= CU_OUT.ALUop;
 		-- EX_MEM_IN.MemToReg <= ID_EX_OUT.MemToReg;
 		-- EX_MEM_IN.MemRead <= ID_EX_OUT.MemRead;
 		-- EX_MEM_IN.Branch <= ID_EX_OUT.Branch;

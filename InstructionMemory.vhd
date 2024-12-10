@@ -113,15 +113,19 @@ begin
         wait; -- Per interrompere il processo
     end process;
 
-    -- Gestione lettura memoria
     process(clk, reset)
-    begin
+	begin
 		if reset = '1' then
-			instructionMem <= instr_mem(0);
-        elsif rising_edge(clk) then
-            instructionMem <= instr_mem(to_integer(unsigned(addressMem)));
-        end if;
-    end process;
+			instructionMem <= instr_mem(0); -- Carica la prima istruzione durante il reset
+		elsif rising_edge(clk) then
+			if addressMem = std_logic_vector(to_unsigned(0, 32)) then
+				instructionMem <= instr_mem(0); -- Mantieni la prima istruzione se l'indirizzo è 0
+			else
+				instructionMem <= instr_mem(to_integer(unsigned(addressMem))); -- Leggi dalla memoria
+			end if;
+		end if;
+end process;
+
 end Behavioral;
 
 
