@@ -19,10 +19,13 @@ package ControlUnitSignals is
 		);
 	end component;
 	
-	type ControlUnitSignals is record
+	type ControlUnitInputSignals is record
 		opcode: std_logic_vector(5 downto 0);
         zero: std_logic;
-        ALUsrc: std_logic;
+	end record;
+	
+	type ControlUnitOutputSignals is record
+		ALUsrc: std_logic;
         ALUop: std_logic_vector(3 downto 0);
         RegDst: std_logic;
         RegWrite: std_logic;
@@ -31,4 +34,20 @@ package ControlUnitSignals is
         MemWrite: std_logic;
         Branch: std_logic;
 	end record;
+	
+	constant initialCUInputs: ControlUnitInputSignals := (
+		opcode => (others => '0'),
+		zero => '0'
+	);
+	
+	constant initialCUOutputs: ControlUnitOutputSignals := (
+		ALUsrc => '0',
+		ALUop => (others => '0'),
+		RegDst => '0',
+		RegWrite => '0',
+		MemToReg => '0',
+		MemRead => '0',		
+		MemWrite => '0',
+		Branch => '0'
+	);
 end ControlUnitSignals;

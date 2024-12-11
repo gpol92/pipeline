@@ -7,8 +7,8 @@ entity IF_ID is
 	Port (
 		clk: in std_logic;
 		reset : in std_logic;
-        IF_ID_IN: in IF_ID_signals;
-		IF_ID_OUT: out IF_ID_signals
+        IF_ID_IN: in IF_ID_Inputs;
+		IF_ID_OUT: out IF_ID_Outputs
     );
 end IF_ID;
 

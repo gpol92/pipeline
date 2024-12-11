@@ -7,8 +7,8 @@ entity ControlUnit is
     Port (
         clk: in std_logic;
         reset: in std_logic;
-        CU_IN: in ControlUnitSignals;
-		CU_OUT: out ControlUnitSignals
+        CU_IN: in ControlUnitInputSignals;
+		CU_OUT: out ControlUnitOutputSignals
     );
 end ControlUnit;
 
@@ -89,7 +89,7 @@ begin
                         CU_OUT.MemRead <= '0';
                         CU_OUT.MemToReg <= '0';
                         CU_OUT.MemWrite <= '0';
-                        CU_OUT.Branch <= not CU_OUT.zero;
+                        CU_OUT.Branch <= not CU_IN.zero;
                     when beqOp =>
                         CU_OUT.ALUop <= "0011";
                         CU_OUT.ALUsrc <= '0';
@@ -98,7 +98,7 @@ begin
                         CU_OUT.MemRead <= '0';
                         CU_OUT.MemToReg <= '0';
                         CU_OUT.MemWrite <= '0';
-                        CU_OUT.Branch <= CU_OUT.zero;
+                        CU_OUT.Branch <= CU_IN.zero;
                     when others =>
                         CU_OUT.ALUsrc <= 'X';
                         CU_OUT.ALUop <= "0000";
@@ -110,10 +110,21 @@ begin
                 end case;
                 nextState <= EXECUTE;
             when EXECUTE =>
-                CU_OUT.RegWrite <= '1';
-                nextState <= MEMORY;
+                case CU_IN.opcode is
+					when loadOp | storeOp =>
+						nextState <= MEMORY;
+					when immOp | arithOp =>
+						nextState <= WRITE_BACK;
+					when others =>
+						nextState <= FETCH;
+				end case;
             when MEMORY =>
-                nextState <= WRITE_BACK;
+				case CU_IN.opcode is
+					when loadOp =>
+						nextState <= WRITE_BACK;
+					when others =>
+						nextState <= FETCH;
+				end case;
             when WRITE_BACK =>
                 nextState <= FETCH;
             when others =>

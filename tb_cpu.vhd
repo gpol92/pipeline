@@ -27,8 +27,8 @@ architecture Behavioral of tb_cpu is
 	signal reset: std_logic := '1';
 	signal pcSrc: std_logic := '0';
 	
-	signal IF_ID_IN: IF_ID_signals;
-	signal IF_ID_OUT: IF_ID_signals;
+	signal IF_ID_IN: IF_ID_Inputs := initialIF_IDInputs;
+	signal IF_ID_OUT: IF_ID_Outputs := initialIF_IDOutputs;
 	
 	signal addressMem: std_logic_vector(31 downto 0) := (others => '0');
 	signal instructionMem: std_logic_vector(31 downto 0) := (others => '0');
@@ -48,8 +48,8 @@ architecture Behavioral of tb_cpu is
 	signal ID_EX_IN: ID_EX_signals;
 	signal ID_EX_OUT: ID_EX_signals;
 	
-	signal CU_IN: ControlUnitSignals;
-	signal CU_OUT: ControlUnitSignals;
+	signal CU_IN: ControlUnitInputSignals := initialCUInputs;
+	signal CU_OUT: ControlUnitOutputSignals := initialCUOutputs;
 	
 	signal EX_MEM_IN: EX_MEM_signals;
 	signal EX_MEM_OUT: EX_MEM_signals;
@@ -137,7 +137,7 @@ begin
 					addressMem <= PC_OUT.PCout;
 					IF_ID_IN.PC <= PC_OUT.PCout;
 					IF_ID_IN.instruction <= instructionMem;
-					PC_IN.PCin <= std_logic_vector(unsigned(PC_OUT.PCout) + 1);
+					CU_IN.opcode <= IF_ID_OUT.instruction(31 downto 26);
 					ID_EX_IN.RegDst <= CU_OUT.RegDst;
 					ID_EX_IN.ALUsrc <= CU_OUT.ALUsrc;
 					ID_EX_IN.MemToReg <= CU_OUT.MemToReg;
@@ -146,9 +146,16 @@ begin
 					ID_EX_IN.MemWrite <= CU_OUT.MemWrite;
 					ID_EX_IN.Branch <= CU_OUT.Branch;
 					ID_EX_IN.ALUop <= CU_OUT.ALUop;
+					RB_IN.read_address1 <= IF_ID_OUT.instruction(25 downto 21);
+					RB_IN.read_address2 <= IF_ID_OUT.instruction(20 downto 16);
+					ID_EX_IN.ReadData1 <= RB_OUT.read_data1;
+					ID_EX_IN.ReadData2 <= RB_OUT.read_data2;
+					ID_EX_IN.RegAddr1 <= IF_ID_OUT.instruction(20 downto 16);
+					ID_EX_IN.RegAddr2 <= IF_ID_OUT.instruction(15 downto 11);
 					EX_MEM_IN.MemToReg <= ID_EX_OUT.MemToReg;
 					EX_MEM_IN.MemRead <= ID_EX_OUT.MemRead;
 					EX_MEM_IN.Branch <= ID_EX_OUT.Branch;
+					PC_IN.PCin <= std_logic_vector(unsigned(PC_OUT.PCout) + 1);
 					instructionCount := instructionCount + 1;
 				end if;
 			else
@@ -168,7 +175,7 @@ end Behavioral;
 		-- CU_IN.opcode <= IF_ID_OUT.instruction(31 downto 26);
 		-- RB_IN.read_address1 <= IF_ID_OUT.instruction(25 downto 21);
 		-- RB_IN.read_address2 <= std_logic_vector(to_unsigned(0, 5));
-		-- RB_IN.write_address <= IF_ID_OUT.instruction(20 downto 16);
+		-- RB_IN.write_address <= IF_ID_OUT.instruction(20 downto 16) when ID_EX_OUT.RegDst = '0' else IF_ID_OUT.instruction(15 downto 11);
 		-- ID_EX_IN.ReadData1 <= RB_OUT.read_data1;
 		-- ID_EX_IN.ReadData2 <= RB_OUT.read_data2;
 		-- ID_EX_IN.RegAddr1 <= IF_ID_OUT.instruction(20 downto 16);
