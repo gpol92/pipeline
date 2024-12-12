@@ -189,6 +189,7 @@ begin
 					ID_EX_IN.RegAddr1 <= IF_ID_OUT.instruction(20 downto 16);
 					ID_EX_IN.RegAddr2 <= IF_ID_OUT.instruction(15 downto 11);
 					EX_MEM_IN.DestReg <= ID_EX_OUT.RegAddr1 when ID_EX_OUT.RegDst = '0' else ID_EX_OUT.RegAddr2;
+					MEM_WB_IN.DestReg <= EX_MEM_OUT.DestReg;
 					RB_IN.write_address <= MEM_WB_OUT.DestReg;
 					instructionCount := instructionCount + 1;
 				end if;
