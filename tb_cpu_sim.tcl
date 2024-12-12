@@ -1,4 +1,12 @@
 quit -sim
+vcom -reportprogress 300 -work work C:/intelFPGA/pipeline/MEM_WB_signals.vhd
+vcom -reportprogress 300 -work work C:/intelFPGA/pipeline/MEM_WB.vhd
+vcom -reportprogress 300 -work work C:/intelFPGA/pipeline/EX_MEM_signals.vhd
+vcom -reportprogress 300 -work work C:/intelFPGA/pipeline/EX_MEM.vhd
+vcom -work work C:/intelFPGA/pipeline/RegisterBankSignals.vhd
+vcom -reportprogress 300 -work work C:/intelFPGA/pipeline/RegisterFile.vhd
+vcom -reportprogress 300 -work work C:/intelFPGA/pipeline/ID_EX_signals.vhd
+vcom -work work C:/intelFPGA/pipeline/ID_EX.vhd
 vcom -work work C:/intelFPGA/pipeline/ControlUnitSignals.vhd
 vcom -work work C:/intelFPGA/pipeline/ControlUnit.vhd
 vcom -reportprogress 300 -work work C:/intelFPGA/pipeline/IF_ID_signals.vhd
@@ -34,6 +42,7 @@ sim:/tb_cpu/CU_IN \
 sim:/tb_cpu/CU_OUT \
 sim:/tb_cpu/EX_MEM_IN \
 sim:/tb_cpu/EX_MEM_OUT \
-sim:/tb_cpu/uut_CU/currentState
-
-run 300 ns
+sim:/tb_cpu/uut_CU/currentState \
+sim:/tb_cpu/MEM_WB_IN \
+sim:/tb_cpu/MEM_WB_OUT
+run 600 ns

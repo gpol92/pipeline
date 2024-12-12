@@ -7,8 +7,8 @@ entity RegisterBank32x32 is
 	port (
 		clk   : in std_logic;
 		reset : in std_logic;
-		RB_IN : in RegisterBankSignals;
-		RB_OUT : out RegisterBankSignals
+		RB_IN : in RegisterBankInputs;
+		RB_OUT : out RegisterBankOutputs
 	);
 end RegisterBank32x32;
 

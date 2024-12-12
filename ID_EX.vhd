@@ -7,8 +7,8 @@ entity ID_EX is
 	Port (
 		clk: in std_logic;
 		reset: in std_logic;
-		ID_EX_IN: in ID_EX_signals;
-		ID_EX_OUT: out ID_EX_signals
+		ID_EX_IN: in ID_EX_Inputs;
+		ID_EX_OUT: out ID_EX_Outputs
 	);
 end ID_EX;
 

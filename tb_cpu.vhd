@@ -8,6 +8,7 @@ use work.ALUSignals.all;
 use work.ID_EX_signals.all;
 use work.ControlUnitSignals.all;
 use work.EX_MEM_signals.all;
+use work.MEM_WB_signals.all;
 
 entity tb_cpu is
 end tb_cpu;
@@ -39,20 +40,23 @@ architecture Behavioral of tb_cpu is
 	signal PC_ID_EX_OUT: unsigned(31 downto 0) := (others => '0');
 	signal jumpPC: std_logic_vector(31 downto 0) := (others => '0');
 	
-	signal RB_IN: RegisterBankSignals;
-	signal RB_OUT: RegisterBankSignals;
+	signal RB_IN: RegisterBankInputs := initialRBInputs;
+	signal RB_OUT: RegisterBankOutputs := initialRBOutputs;
 	
 	signal ALU_IN: ALUSignals;
 	signal ALU_OUT: ALUSignals;
 	
-	signal ID_EX_IN: ID_EX_signals;
-	signal ID_EX_OUT: ID_EX_signals;
+	signal ID_EX_IN: ID_EX_Inputs := initialID_EX_Inputs;
+	signal ID_EX_OUT: ID_EX_Outputs := initialID_EX_Outputs;
 	
 	signal CU_IN: ControlUnitInputSignals := initialCUInputs;
 	signal CU_OUT: ControlUnitOutputSignals := initialCUOutputs;
 	
-	signal EX_MEM_IN: EX_MEM_signals;
-	signal EX_MEM_OUT: EX_MEM_signals;
+	signal EX_MEM_IN: EX_MEM_Inputs := initialEX_MEM_Inputs;
+	signal EX_MEM_OUT: EX_MEM_Outputs := initialEX_MEM_Outputs;
+	
+	signal MEM_WB_IN: MEM_WB_Inputs := initialMEMWBInputs;
+	signal MEM_WB_OUT: MEM_WB_Outputs := initialMEMWBOutputs;
 begin
 	uut_IM: InstructionMemory
 		Port map (
@@ -112,7 +116,14 @@ begin
 			EX_MEM_IN => EX_MEM_IN,
 			EX_MEM_OUT => EX_MEM_OUT
 		);
-	
+		
+	uut_MEM_WB: entity work.MEM_WB	
+		Port map (
+			clk => clk,
+			reset => reset,
+			MEM_WB_IN => MEM_WB_IN,
+			MEM_WB_OUT => MEM_WB_OUT
+		);
 	process
 	begin
 		clk <= '0';
@@ -138,6 +149,8 @@ begin
 					IF_ID_IN.PC <= PC_OUT.PCout;
 					IF_ID_IN.instruction <= instructionMem;
 					CU_IN.opcode <= IF_ID_OUT.instruction(31 downto 26);
+					ID_EX_IN.PC <= IF_ID_OUT.PC;
+					ID_EX_IN.instruction <= IF_ID_OUT.instruction;
 					ID_EX_IN.RegDst <= CU_OUT.RegDst;
 					ID_EX_IN.ALUsrc <= CU_OUT.ALUsrc;
 					ID_EX_IN.MemToReg <= CU_OUT.MemToReg;
@@ -150,8 +163,10 @@ begin
 					RB_IN.read_address2 <= IF_ID_OUT.instruction(20 downto 16);
 					ID_EX_IN.ReadData1 <= RB_OUT.read_data1;
 					ID_EX_IN.ReadData2 <= RB_OUT.read_data2;
-					ID_EX_IN.RegAddr1 <= IF_ID_OUT.instruction(20 downto 16);
-					ID_EX_IN.RegAddr2 <= IF_ID_OUT.instruction(15 downto 11);
+					EX_MEM_IN.RegWrite <= ID_EX_OUT.RegWrite;
+					MEM_WB_IN.RegWrite <= EX_MEM_OUT.RegWrite;
+					RB_IN.RegWrite <= MEM_WB_OUT.RegWrite;
+					EX_MEM_IN.MemWrite <= ID_EX_OUT.MemWrite;
 					EX_MEM_IN.MemToReg <= ID_EX_OUT.MemToReg;
 					EX_MEM_IN.MemRead <= ID_EX_OUT.MemRead;
 					EX_MEM_IN.Branch <= ID_EX_OUT.Branch;
@@ -163,8 +178,25 @@ begin
 				instructionCount := 0;
 			end if;
 		end if;
-end process;
-
+	end process;
+	
+	process(clk)
+		variable instructionCount: integer := 0;
+	begin	
+		if rising_edge(clk) then
+			if reset = '0' then
+				if instructionCount < 10 then
+					ID_EX_IN.RegAddr1 <= IF_ID_OUT.instruction(20 downto 16);
+					ID_EX_IN.RegAddr2 <= IF_ID_OUT.instruction(15 downto 11);
+					EX_MEM_IN.DestReg <= ID_EX_OUT.RegAddr1 when ID_EX_OUT.RegDst = '0' else ID_EX_OUT.RegAddr2;
+					RB_IN.write_address <= MEM_WB_OUT.DestReg;
+					instructionCount := instructionCount + 1;
+				end if;
+			else
+				instructionCount := 0;
+			end if;
+		end if;
+	end process;
 end Behavioral;
 
 -- process
