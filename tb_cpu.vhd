@@ -37,9 +37,6 @@ architecture Behavioral of tb_cpu is
 	signal PC_IN: PCInputs := initialPCInputs;
 	signal PC_OUT: PCOutputs := initialPCOutputs;
 	
-	signal PC_ID_EX_OUT: unsigned(31 downto 0) := (others => '0');
-	signal jumpPC: std_logic_vector(31 downto 0) := (others => '0');
-	
 	signal RB_IN: RegisterBankInputs := initialRBInputs;
 	signal RB_OUT: RegisterBankOutputs := initialRBOutputs;
 	
@@ -140,61 +137,62 @@ begin
 	end process;
 	
 	process(clk)
-		variable instructionCount: integer := 0;
+		variable PCout: std_logic_vector(31 downto 0) := (others => '0');
+		variable jumpPC: std_logic_vector(31 downto 0) := (others => '0');
+		variable jumpedPC: std_logic_vector(31 downto 0) := (others => '0');
 	begin
 		if rising_edge(clk) then
 			if reset = '0' then
-				if instructionCount < 10 then
-					addressMem <= PC_OUT.PCout;
-					IF_ID_IN.PC <= PC_OUT.PCout;
-					IF_ID_IN.instruction <= instructionMem;
-					CU_IN.opcode <= IF_ID_OUT.instruction(31 downto 26);
-					ID_EX_IN.PC <= IF_ID_OUT.PC;
-					ID_EX_IN.instruction <= IF_ID_OUT.instruction;
-					ID_EX_IN.RegDst <= CU_OUT.RegDst;
-					ID_EX_IN.ALUsrc <= CU_OUT.ALUsrc;
-					ID_EX_IN.MemToReg <= CU_OUT.MemToReg;
-					ID_EX_IN.RegWrite <= CU_OUT.RegWrite;
-					ID_EX_IN.MemRead <= CU_OUT.MemRead;
-					ID_EX_IN.MemWrite <= CU_OUT.MemWrite;
-					ID_EX_IN.Branch <= CU_OUT.Branch;
-					ID_EX_IN.ALUop <= CU_OUT.ALUop;
-					RB_IN.read_address1 <= IF_ID_OUT.instruction(25 downto 21);
-					RB_IN.read_address2 <= IF_ID_OUT.instruction(20 downto 16);
-					ID_EX_IN.ReadData1 <= RB_OUT.read_data1;
-					ID_EX_IN.ReadData2 <= RB_OUT.read_data2;
-					EX_MEM_IN.RegWrite <= ID_EX_OUT.RegWrite;
-					MEM_WB_IN.RegWrite <= EX_MEM_OUT.RegWrite;
-					RB_IN.RegWrite <= MEM_WB_OUT.RegWrite;
-					EX_MEM_IN.MemWrite <= ID_EX_OUT.MemWrite;
-					EX_MEM_IN.MemToReg <= ID_EX_OUT.MemToReg;
-					EX_MEM_IN.MemRead <= ID_EX_OUT.MemRead;
-					EX_MEM_IN.Branch <= ID_EX_OUT.Branch;
-					PC_IN.PCin <= std_logic_vector(unsigned(PC_OUT.PCout) + 1);
-					instructionCount := instructionCount + 1;
-				end if;
-			else
-				-- Resetta il contatore quando il segnale reset è attivo
-				instructionCount := 0;
+				addressMem <= PC_OUT.PCout;
+				IF_ID_IN.PC <= PC_OUT.PCout;
+				IF_ID_IN.instruction <= instructionMem;
+				CU_IN.opcode <= IF_ID_OUT.instruction(31 downto 26);
+				ID_EX_IN.PC <= IF_ID_OUT.PC;
+				ID_EX_IN.instruction <= IF_ID_OUT.instruction;
+				ID_EX_IN.RegDst <= CU_OUT.RegDst;
+				ID_EX_IN.ALUsrc <= CU_OUT.ALUsrc;
+				ID_EX_IN.MemToReg <= CU_OUT.MemToReg;
+				ID_EX_IN.RegWrite <= CU_OUT.RegWrite;
+				ID_EX_IN.MemRead <= CU_OUT.MemRead;
+				ID_EX_IN.MemWrite <= CU_OUT.MemWrite;
+				ID_EX_IN.Branch <= CU_OUT.Branch;
+				ID_EX_IN.ALUop <= CU_OUT.ALUop;
+				RB_IN.read_address1 <= IF_ID_OUT.instruction(25 downto 21);
+				RB_IN.read_address2 <= IF_ID_OUT.instruction(20 downto 16);
+				ID_EX_IN.ReadData1 <= RB_OUT.read_data1;
+				ID_EX_IN.ReadData2 <= RB_OUT.read_data2;
+				EX_MEM_IN.RegWrite <= ID_EX_OUT.RegWrite;
+				MEM_WB_IN.RegWrite <= EX_MEM_OUT.RegWrite;
+				RB_IN.RegWrite <= MEM_WB_OUT.RegWrite;
+				EX_MEM_IN.MemWrite <= ID_EX_OUT.MemWrite;
+				EX_MEM_IN.MemToReg <= ID_EX_OUT.MemToReg;
+				EX_MEM_IN.MemRead <= ID_EX_OUT.MemRead;
+				EX_MEM_IN.Branch <= ID_EX_OUT.Branch;
+				EX_MEM_IN.zero <= ALU_OUT.zero;
+				pcSrc <= EX_MEM_OUT.zero and EX_MEM_OUT.Branch;
+				PCout := PC_OUT.PCout;
+				jumpPC := std_logic_vector(to_unsigned(0, 6)) & IF_ID_OUT.instruction(25 downto 0);
+				jumpedPC := std_logic_vector(unsigned(PCout) + unsigned(jumpPC));
+				PC_IN.PCin <= std_logic_vector(unsigned(PC_OUT.PCout) + 1) when pcSrc = '0' else jumpedPC;
 			end if;
 		end if;
 	end process;
 	
 	process(clk)
-		variable instructionCount: integer := 0;
 	begin	
 		if rising_edge(clk) then
 			if reset = '0' then
-				if instructionCount < 10 then
-					ID_EX_IN.RegAddr1 <= IF_ID_OUT.instruction(20 downto 16);
-					ID_EX_IN.RegAddr2 <= IF_ID_OUT.instruction(15 downto 11);
-					EX_MEM_IN.DestReg <= ID_EX_OUT.RegAddr1 when ID_EX_OUT.RegDst = '0' else ID_EX_OUT.RegAddr2;
-					MEM_WB_IN.DestReg <= EX_MEM_OUT.DestReg;
-					RB_IN.write_address <= MEM_WB_OUT.DestReg;
-					instructionCount := instructionCount + 1;
-				end if;
-			else
-				instructionCount := 0;
+				ID_EX_IN.RegAddr1 <= IF_ID_OUT.instruction(20 downto 16);
+				ID_EX_IN.RegAddr2 <= IF_ID_OUT.instruction(15 downto 11);
+				ID_EX_IN.SignExtImm <= std_logic_vector(resize(signed(IF_ID_OUT.instruction(15 downto 0)), 32));
+				EX_MEM_IN.DestReg <= ID_EX_OUT.RegAddr1 when ID_EX_OUT.RegDst = '0' else ID_EX_OUT.RegAddr2;
+				MEM_WB_IN.DestReg <= EX_MEM_OUT.DestReg;
+				RB_IN.write_address <= MEM_WB_OUT.DestReg;
+				ALU_IN.ALUop <= ID_EX_OUT.ALUop;
+				ALU_IN.opA <= RB_OUT.read_data1;
+				ALU_IN.opB <= RB_OUT.read_data2 when ID_EX_OUT.ALUsrc = '0' else ID_EX_OUT.SignExtImm;
+				ALU_IN.funct <= IF_ID_OUT.instruction(5 downto 0);
+				RB_IN.write_data <= ALU_OUT.ALUout;
 			end if;
 		end if;
 	end process;
