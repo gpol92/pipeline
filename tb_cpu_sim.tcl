@@ -1,4 +1,5 @@
 quit -sim
+vcom -work work C:/intelFPGA/pipeline/InstructionMemory.vhd
 vcom -reportprogress 300 -work work C:/intelFPGA/pipeline/MEM_WB_signals.vhd
 vcom -reportprogress 300 -work work C:/intelFPGA/pipeline/MEM_WB.vhd
 vcom -reportprogress 300 -work work C:/intelFPGA/pipeline/EX_MEM_signals.vhd
@@ -30,8 +31,6 @@ sim:/tb_cpu/addressMem \
 sim:/tb_cpu/instructionMem \
 sim:/tb_cpu/PC_IN \
 sim:/tb_cpu/PC_OUT \
-sim:/tb_cpu/PC_ID_EX_OUT \
-sim:/tb_cpu/jumpPC \
 sim:/tb_cpu/RB_IN \
 sim:/tb_cpu/RB_OUT \
 sim:/tb_cpu/ALU_IN \

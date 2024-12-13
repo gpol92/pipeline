@@ -110,6 +110,24 @@ begin
 			immediate => std_logic_vector(to_unsigned(1, 16)),
 			address => 5
 		);
+		
+		load_I_instruction(
+			mem => instr_mem,
+			opcode => "000011",
+			sourceReg1 => "01110",
+			writeReg => "01111",
+			immediate => std_logic_vector(to_unsigned(1, 16)),
+			address => 6
+		);
+		
+		load_I_instruction(
+			mem => instr_mem,
+			opcode => "000100",
+			sourceReg1 => "01110",
+			writeReg => "01111",
+			immediate => std_logic_vector(to_unsigned(4, 16)),
+			address => 7
+		);
         wait; -- Per interrompere il processo
     end process;
 
