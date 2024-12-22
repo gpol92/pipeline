@@ -37,11 +37,19 @@ begin
 
     process(currentState, CU_IN.opcode, CU_IN.zero) 
     begin
+        CU_OUT.ALUsrc <= 'X';
+        CU_OUT.ALUop <= "0000";
+        CU_OUT.RegDst <= 'X';
+        CU_OUT.RegWrite <= '0';
+        CU_OUT.MemRead <= '0';
+        CU_OUT.MemToReg <= 'X';
+        CU_OUT.MemWrite <= '0';
+        CU_OUT.Branch <= '0';
         case currentState is
             when FETCH =>
-                CU_OUT.ALUsrc <= 'X';
+                CU_OUT.ALUsrc <= '0';
                 CU_OUT.ALUop <= "0000";
-                CU_OUT.RegDst <= 'X';
+                CU_OUT.RegDst <= '0';
                 CU_OUT.RegWrite <= '0';
                 nextState <= DECODE;
             when DECODE => 
@@ -119,6 +127,7 @@ begin
 						nextState <= FETCH;
 				end case;
             when MEMORY =>
+                CU_OUT.ALUsrc <= '0';
 				case CU_IN.opcode is
 					when loadOp =>
 						nextState <= WRITE_BACK;
@@ -126,6 +135,7 @@ begin
 						nextState <= FETCH;
 				end case;
             when WRITE_BACK =>
+                CU_OUT.ALUsrc <= '0';
                 nextState <= FETCH;
             when others =>
                 CU_OUT.ALUsrc <= 'X';

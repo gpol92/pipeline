@@ -1,15 +1,13 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+use work.DataMemorySignals.all;
 
 entity DataMemory is
 	Port (
 		clk: in std_logic;
-		MemRead: in std_logic;
-		MemWrite: in std_logic;
-		addr: in std_logic_vector(31 downto 0);
-		data_in: in std_logic_vector(31 downto 0);
-		data_out: out std_logic_vector(31 downto 0)
+		DM_IN: in DataMemoryInputs;
+		DM_OUT: out DataMemoryOutputs
 	);
 end DataMemory;
 
@@ -24,11 +22,11 @@ begin
 	process(clk)
 	begin
 		if rising_edge(clk) then
-			if MemWrite = '1' then
-				data_mem(to_integer(unsigned(addr))) <= data_in;
+			if DM_IN.MemWrite = '1' then
+				data_mem(to_integer(unsigned(DM_IN.addr))) <= DM_IN.data_in;
 			end if;
 		end if;
 	end process;
 	
-	data_out <= data_mem(to_integer(unsigned(addr))) when MemRead = '1' else (others => '0');
+	DM_OUT.data_out <= data_mem(to_integer(unsigned(DM_IN.addr))) when DM_IN.MemRead = '1' else (others => '0');
 end Behavioral;

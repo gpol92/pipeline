@@ -9,6 +9,7 @@ use work.ID_EX_signals.all;
 use work.ControlUnitSignals.all;
 use work.EX_MEM_signals.all;
 use work.MEM_WB_signals.all;
+use work.DataMemorySignals.all;
 
 entity tb_cpu is
 end tb_cpu;
@@ -21,6 +22,14 @@ architecture Behavioral of tb_cpu is
 			reset: in std_logic;
 			addressMem: in std_logic_vector(31 downto 0);
 			instructionMem: out std_logic_vector(31 downto 0) := (others => '0')
+		);
+	end component;
+	
+	component DataMemory
+		Port (
+			clk: in std_logic;
+			DM_IN: in DataMemoryInputs;
+			DM_OUT: out DataMemoryOutputs
 		);
 	end component;
 	
@@ -40,8 +49,8 @@ architecture Behavioral of tb_cpu is
 	signal RB_IN: RegisterBankInputs := initialRBInputs;
 	signal RB_OUT: RegisterBankOutputs := initialRBOutputs;
 	
-	signal ALU_IN: ALUSignals;
-	signal ALU_OUT: ALUSignals;
+	signal ALU_IN: ALUInputSignals := initialALUInputs;
+	signal ALU_OUT: ALUOutputSignals := initialALUOutputs;
 	
 	signal ID_EX_IN: ID_EX_Inputs := initialID_EX_Inputs;
 	signal ID_EX_OUT: ID_EX_Outputs := initialID_EX_Outputs;
@@ -54,6 +63,10 @@ architecture Behavioral of tb_cpu is
 	
 	signal MEM_WB_IN: MEM_WB_Inputs := initialMEMWBInputs;
 	signal MEM_WB_OUT: MEM_WB_Outputs := initialMEMWBOutputs;
+	
+	signal DM_IN: DataMemoryInputs := initialDMInputs;
+	signal DM_OUT: DataMemoryOutputs := initialDMOutputs;
+	
 begin
 	uut_IM: InstructionMemory
 		Port map (
@@ -121,6 +134,14 @@ begin
 			MEM_WB_IN => MEM_WB_IN,
 			MEM_WB_OUT => MEM_WB_OUT
 		);
+		
+	uut_DM: DataMemory
+		Port map (
+			clk => clk,
+			DM_IN => DM_IN,
+			DM_OUT => DM_OUT
+		);
+		
 	process
 	begin
 		clk <= '0';
@@ -137,7 +158,7 @@ begin
 	end process;
 	
 	process(clk)
-		variable PCout: std_logic_vector(31 downto 0) := (others => '0');
+		-- variable PCout: std_logic_vector(31 downto 0) := (others => '0');
 		variable jumpPC: std_logic_vector(31 downto 0) := (others => '0');
 		variable jumpedPC: std_logic_vector(31 downto 0) := (others => '0');
 	begin
@@ -148,7 +169,6 @@ begin
 				IF_ID_IN.instruction <= instructionMem;
 				CU_IN.opcode <= IF_ID_OUT.instruction(31 downto 26);
 				ID_EX_IN.PC <= IF_ID_OUT.PC;
-				ID_EX_IN.instruction <= IF_ID_OUT.instruction;
 				ID_EX_IN.RegDst <= CU_OUT.RegDst;
 				ID_EX_IN.ALUsrc <= CU_OUT.ALUsrc;
 				ID_EX_IN.MemToReg <= CU_OUT.MemToReg;
@@ -170,10 +190,10 @@ begin
 				EX_MEM_IN.Branch <= ID_EX_OUT.Branch;
 				EX_MEM_IN.zero <= ALU_OUT.zero;
 				pcSrc <= EX_MEM_OUT.zero and EX_MEM_OUT.Branch;
-				PCout := PC_OUT.PCout;
+				-- PCout := PC_OUT.PCout;
 				jumpPC := std_logic_vector(to_unsigned(0, 6)) & IF_ID_OUT.instruction(25 downto 0);
-				jumpedPC := std_logic_vector(unsigned(PCout) + unsigned(jumpPC));
-				PC_IN.PCin <= std_logic_vector(unsigned(PC_OUT.PCout) + 1) when pcSrc = '0' else jumpedPC;
+				jumpedPC := std_logic_vector(unsigned(ID_EX_OUT.PC) + unsigned(jumpPC));
+				PC_IN.PCin <= std_logic_vector(unsigned(ID_EX_OUT.PC) + 1) when pcSrc = '0' else jumpedPC;
 			end if;
 		end if;
 	end process;
@@ -186,13 +206,22 @@ begin
 				ID_EX_IN.RegAddr2 <= IF_ID_OUT.instruction(15 downto 11);
 				ID_EX_IN.SignExtImm <= std_logic_vector(resize(signed(IF_ID_OUT.instruction(15 downto 0)), 32));
 				EX_MEM_IN.DestReg <= ID_EX_OUT.RegAddr1 when ID_EX_OUT.RegDst = '0' else ID_EX_OUT.RegAddr2;
+				EX_MEM_IN.ReadData2 <= ID_EX_OUT.ReadData2;
 				MEM_WB_IN.DestReg <= EX_MEM_OUT.DestReg;
+				MEM_WB_IN.MemToReg <= EX_MEM_OUT.MemToReg;
+				DM_IN.MemRead <= EX_MEM_OUT.MemRead;
+				DM_IN.MemWrite <= EX_MEM_OUT.MemWrite;
+				DM_IN.addr <= EX_MEM_OUT.ALUresult;
+				DM_IN.data_in <= EX_MEM_OUT.ReadData2 when DM_IN.MemWrite = '1' else std_logic_vector(to_unsigned(0, 32));
 				RB_IN.write_address <= MEM_WB_OUT.DestReg;
 				ALU_IN.ALUop <= ID_EX_OUT.ALUop;
-				ALU_IN.opA <= RB_OUT.read_data1;
-				ALU_IN.opB <= RB_OUT.read_data2 when ID_EX_OUT.ALUsrc = '0' else ID_EX_OUT.SignExtImm;
+				ALU_IN.opA <= ID_EX_OUT.ReadData1;
+				ALU_IN.opB <= ID_EX_OUT.ReadData2 when ID_EX_OUT.ALUsrc = '0' else ID_EX_OUT.SignExtImm;
 				ALU_IN.funct <= IF_ID_OUT.instruction(5 downto 0);
-				RB_IN.write_data <= ALU_OUT.ALUout;
+				EX_MEM_IN.ALUresult <= ALU_OUT.ALUout;
+				MEM_WB_IN.MemDataOut <= DM_OUT.data_out;
+				MEM_WB_IN.ALUresult <= EX_MEM_OUT.ALUresult;
+				RB_IN.write_data <= MEM_WB_OUT.ALUresult when MEM_WB_OUT.MemToReg = '0' else MEM_WB_OUT.MemDataOut;	
 			end if;
 		end if;
 	end process;

@@ -5,8 +5,8 @@ use work.ALUSignals.all;
 
 entity ALU is
 	Port (
-		ALU_IN: in ALUSignals;
-		ALU_OUT: out ALUSignals
+		ALU_IN: in ALUInputSignals;
+		ALU_OUT: out ALUOutputSignals
 	);
 end ALU;
 
@@ -17,6 +17,7 @@ architecture Behavioral of ALU is
 begin
 	process(ALU_IN.opA, ALU_IN.opB, ALU_IN.ALUop, ALU_IN.funct)
 	begin
+		ALUresult <= (others => '0');
 		ALU_OUT.zero <= '0';
 		case(ALU_IN.ALUop) is
 			when "0000" =>

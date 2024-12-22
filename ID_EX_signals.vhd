@@ -7,7 +7,6 @@ package ID_EX_signals is
 	component ID_EX is 
 		Port (
 			PC: in std_logic_vector(31 downto 0);
-			instruction: in std_logic_vector(31 downto 0);
 			ReadData1: in std_logic_vector(31 downto 0);
 			ReadData2: in std_logic_vector(31 downto 0);
 			SignExtImm: in std_logic_vector(31 downto 0);
@@ -26,7 +25,6 @@ package ID_EX_signals is
 	
 	type ID_EX_Inputs is record
 		PC: std_logic_vector(31 downto 0);
-		instruction: std_logic_vector(31 downto 0);
 		ReadData1: std_logic_vector(31 downto 0);
 		ReadData2: std_logic_vector(31 downto 0);
 		SignExtImm: std_logic_vector(31 downto 0);
@@ -44,7 +42,6 @@ package ID_EX_signals is
 	
 	type ID_EX_Outputs is record
 		PC: std_logic_vector(31 downto 0);
-		instruction: std_logic_vector(31 downto 0);
 		ReadData1: std_logic_vector(31 downto 0);
 		ReadData2: std_logic_vector(31 downto 0);
 		SignExtImm: std_logic_vector(31 downto 0);
@@ -62,7 +59,6 @@ package ID_EX_signals is
 	
 	constant initialID_EX_Inputs: ID_EX_Inputs := (
 		PC => (others => '0'),
-		instruction => (others => '0'),
 		ReadData1 => (others => '0'),
 		ReadData2 => (others => '0'),
 		SignExtImm => (others => '0'),
@@ -80,7 +76,6 @@ package ID_EX_signals is
 	
 	constant initialID_EX_Outputs: ID_EX_Outputs := (
 		PC => (others => '0'),
-		instruction => (others => '0'),
 		ReadData1 => (others => '0'),
 		ReadData2 => (others => '0'),
 		SignExtImm => (others => '0'),

@@ -8,7 +8,6 @@ package EX_MEM_signals is
 		zero: std_logic;
 		RegWrite: std_logic;
 		ALUresult: std_logic_vector(31 downto 0);
-		ALUsrc: std_logic;
 		ReadData2: std_logic_vector(31 downto 0);
 		DestReg: std_logic_vector(4 downto 0);
 		MemRead: std_logic;
@@ -21,7 +20,6 @@ package EX_MEM_signals is
 		zero: std_logic;
 		RegWrite: std_logic;
 		ALUresult: std_logic_vector(31 downto 0);
-		ALUsrc: std_logic;
 		ReadData2: std_logic_vector(31 downto 0);
 		DestReg: std_logic_vector(4 downto 0);
 		MemRead: std_logic;
@@ -34,7 +32,6 @@ package EX_MEM_signals is
 		zero => '0',
 		RegWrite => '0',
 		ALUresult => (others => '0'),
-		ALUsrc => '0',
 		ReadData2 => (others => '0'),
 		DestReg => (others => '0'),
 		MemRead => '0',
@@ -47,7 +44,6 @@ package EX_MEM_signals is
 		zero => '0',
 		RegWrite => '0',
 		ALUresult => (others => '0'),
-		ALUsrc => '0',
 		ReadData2 => (others => '0'),
 		DestReg => (others => '0'),
 		MemRead => '0',

@@ -32,6 +32,7 @@ begin
 	process(clk, reset)
 	begin
 		if reset = '1' then
+		    PC_reg <= (others => '0');
 			Instruction_reg <= (others => '0');
 			ReadData1_reg <= (others => '0');
 			ReadData2_reg <= (others => '0');
@@ -48,7 +49,6 @@ begin
 			ALUop_reg <= (others => '0');
 		elsif rising_edge(clk) then
 			PC_reg <= ID_EX_IN.PC;
-			Instruction_reg <= ID_EX_IN.instruction;
 			ReadData1_reg <= ID_EX_IN.ReadData1;
 			ReadData2_reg <= ID_EX_IN.ReadData2;
 			SignExtImm_reg <= ID_EX_IN.SignExtImm;
@@ -66,7 +66,6 @@ begin
 	end process;
 	
 	ID_EX_OUT.PC <= PC_reg;
-	ID_EX_OUT.instruction <= Instruction_reg;
 	ID_EX_OUT.ReadData1 <= ReadData1_reg;
 	ID_EX_OUT.ReadData2 <= ReadData2_reg;
 	ID_EX_OUT.SignExtImm <= SignExtImm_reg;
