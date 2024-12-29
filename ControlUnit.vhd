@@ -15,7 +15,9 @@ end ControlUnit;
 architecture Behavioral of ControlUnit is
     type state is (FETCH, DECODE, EXECUTE, MEMORY, WRITE_BACK);
     signal currentState, nextState: state;
-    
+    attribute keep: string;
+	attribute keep of currentState: signal is "true";
+	
     constant immOp: std_logic_vector(5 downto 0) := "000001";
     constant arithOp: std_logic_vector(5 downto 0) := "000010";
     constant loadOp: std_logic_vector(5 downto 0) := "000011";
@@ -37,12 +39,12 @@ begin
 
     process(currentState, CU_IN.opcode, CU_IN.zero) 
     begin
-        CU_OUT.ALUsrc <= 'X';
+        CU_OUT.ALUsrc <= '0';
         CU_OUT.ALUop <= "0000";
-        CU_OUT.RegDst <= 'X';
+        CU_OUT.RegDst <= '0';
         CU_OUT.RegWrite <= '0';
         CU_OUT.MemRead <= '0';
-        CU_OUT.MemToReg <= 'X';
+        CU_OUT.MemToReg <= '0';
         CU_OUT.MemWrite <= '0';
         CU_OUT.Branch <= '0';
         case currentState is
@@ -59,10 +61,10 @@ begin
                         CU_OUT.ALUop <= "0001";
                         CU_OUT.RegDst <= '0';
                         CU_OUT.RegWrite <= '1';
-                        CU_OUT.MemRead <= 'X';
-                        CU_OUT.MemToReg <= 'X';
-                        CU_OUT.MemWrite <= 'X';
-                        CU_OUT.Branch <= 'X';
+                        CU_OUT.MemRead <= '0';
+                        CU_OUT.MemToReg <= '0';
+                        CU_OUT.MemWrite <= '0';
+                        CU_OUT.Branch <= '0';
                     when arithOp =>
                         CU_OUT.ALUsrc <= '0';
                         CU_OUT.ALUop <= "0010";
@@ -83,16 +85,16 @@ begin
                     when storeOp =>
                         CU_OUT.ALUsrc <= '1';
                         CU_OUT.ALUop <= "0010";
-                        CU_OUT.RegDst <= 'X';
+                        CU_OUT.RegDst <= '0';
                         CU_OUT.RegWrite <= '0';
                         CU_OUT.MemRead <= '0';
-                        CU_OUT.MemToReg <= 'X';
+                        CU_OUT.MemToReg <= '0';
                         CU_OUT.MemWrite <= '1';
                         CU_OUT.Branch <= '0';
                     when bneOp =>
                         CU_OUT.ALUop <= "0011";
                         CU_OUT.ALUsrc <= '0';
-                        CU_OUT.RegDst <= 'X';
+                        CU_OUT.RegDst <= '0';
                         CU_OUT.RegWrite <= '0';
                         CU_OUT.MemRead <= '0';
                         CU_OUT.MemToReg <= '0';
@@ -101,19 +103,19 @@ begin
                     when beqOp =>
                         CU_OUT.ALUop <= "0011";
                         CU_OUT.ALUsrc <= '0';
-                        CU_OUT.RegDst <= 'X';
+                        CU_OUT.RegDst <= '0';
                         CU_OUT.RegWrite <= '0';
                         CU_OUT.MemRead <= '0';
                         CU_OUT.MemToReg <= '0';
                         CU_OUT.MemWrite <= '0';
                         CU_OUT.Branch <= CU_IN.zero;
                     when others =>
-                        CU_OUT.ALUsrc <= 'X';
+                        CU_OUT.ALUsrc <= '0';
                         CU_OUT.ALUop <= "0000";
-                        CU_OUT.RegDst <= 'X';
+                        CU_OUT.RegDst <= '0';
                         CU_OUT.RegWrite <= '0';
                         CU_OUT.MemRead <= '0';
-                        CU_OUT.MemToReg <= 'X';
+                        CU_OUT.MemToReg <= '0';
                         CU_OUT.MemWrite <= '0';
                 end case;
                 nextState <= EXECUTE;
@@ -138,9 +140,9 @@ begin
                 CU_OUT.ALUsrc <= '0';
                 nextState <= FETCH;
             when others =>
-                CU_OUT.ALUsrc <= 'X';
+                CU_OUT.ALUsrc <= '0';
                 CU_OUT.ALUop <= "0000";
-                CU_OUT.RegDst <= 'X';
+                CU_OUT.RegDst <= '0';
                 CU_OUT.RegWrite <= '0';
                 nextState <= FETCH;
         end case;

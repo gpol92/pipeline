@@ -1,4 +1,6 @@
+.main clear
 quit -sim
+vcom -work work C:/Users/gpoli/pipeline/InstructionMemory.vhd
 vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/ALUSignals.vhd 
 vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/ALU.vhd 
 vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/MEM_WB_signals.vhd
@@ -44,6 +46,9 @@ sim:/tb_cpu/addressMem \
 sim:/tb_cpu/instructionMem \
 sim:/tb_cpu/PC_IN \
 sim:/tb_cpu/PC_OUT \
+sim:/tb_cpu/uut_RB/registers(15) \
+sim:/tb_cpu/uut_RB/registers(16) \
+sim:/tb_cpu/uut_RB/registers(17) \
 sim:/tb_cpu/RB_IN \
 sim:/tb_cpu/RB_OUT \
 sim:/tb_cpu/ALU_IN \
@@ -57,4 +62,4 @@ sim:/tb_cpu/EX_MEM_OUT \
 sim:/tb_cpu/uut_CU/currentState \
 sim:/tb_cpu/MEM_WB_IN \
 sim:/tb_cpu/MEM_WB_OUT
-run 600 ns
+run 200 ns

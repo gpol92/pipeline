@@ -1,7 +1,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use work.R_Instruction.all;
 
 entity InstructionMemory is
     Port (
@@ -48,6 +47,18 @@ architecture Behavioral of InstructionMemory is
 		mem(address) <= instr;
 	end procedure;
 	
+	procedure load_J_instruction (
+		signal mem: inout instruction_memory;
+		opcode: in std_logic_vector(5 downto 0);
+		immediate: in std_logic_vector(31 downto 6);
+		address: integer
+	)
+	is
+		variable instr: std_logic_vector(31 downto 0);
+	begin
+		instr := opcode & immediate;
+		mem(address) <= instr;
+	end procedure;
 begin
     -- Caricamento iniziale delle istruzioni nella memoria
     process
@@ -62,72 +73,87 @@ begin
 			address => 0
 		);
 		
-		-- load_I_instruction(
-			-- mem => instr_mem,
-			-- opcode => "000001",
-			-- sourceReg1 => "00000",
-			-- writeReg => "10001",
-			-- immediate => "0000000000000101",
-			-- address => 1
-		-- );
+		load_I_instruction(
+			mem => instr_mem,
+			opcode => "000001",
+			sourceReg1 => "00000",
+			writeReg => "10001",
+			immediate => "0000000000000101",
+			address => 1
+		);
 		
-		-- load_R_instruction(
-			-- mem => instr_mem,
-			-- opcode => "000010",
-			-- sourceReg1 => "10000",
-			-- sourceReg2 => "10001",
-			-- writeReg => "10010",
-			-- shiftAmount => "00000",
-			-- funct => "000010",
-			-- address => 2
-		-- );
+		load_R_instruction(
+			mem => instr_mem,
+			opcode => "000010",
+			sourceReg1 => "10000",
+			sourceReg2 => "10001",
+			writeReg => "10010",
+			shiftAmount => "00000",
+			funct => "000010",
+			address => 2
+		);
 
-		-- load_R_instruction(
-			-- mem => instr_mem,
-			-- opcode => "000010",
-			-- sourceReg1 => "10000",
-			-- sourceReg2 => "10001",
-			-- writeReg => "10011",
-			-- shiftAmount => "00000",
-			-- funct => "000011",
-			-- address => 3
-		-- );	
+		load_R_instruction(
+			mem => instr_mem,
+			opcode => "000010",
+			sourceReg1 => "10000",
+			sourceReg2 => "10001",
+			writeReg => "10011",
+			shiftAmount => "00000",
+			funct => "000011",
+			address => 3
+		);	
 		
-		-- load_I_instruction(
-			-- mem => instr_mem,
-			-- opcode => "000001",
-			-- sourceReg1 => "00000",
-			-- writeReg => "01110",
-			-- immediate => std_logic_vector(to_unsigned(1, 16)),
-			-- address => 4
-		-- );
+		load_I_instruction(
+			mem => instr_mem,
+			opcode => "000001",
+			sourceReg1 => "00000",
+			writeReg => "01110",
+			immediate => std_logic_vector(to_unsigned(1, 16)),
+			address => 4
+		);
 		
-		-- load_I_instruction(
-			-- mem => instr_mem,
-			-- opcode => "000001",
-			-- sourceReg1 => "00000",
-			-- writeReg => "01111",
-			-- immediate => std_logic_vector(to_unsigned(1, 16)),
-			-- address => 5
-		-- );
+		load_I_instruction(
+			mem => instr_mem,
+			opcode => "000001",
+			sourceReg1 => "00000",
+			writeReg => "01111",
+			immediate => std_logic_vector(to_unsigned(1, 16)),
+			address => 5
+		);
 		
-		-- load_I_instruction(
-			-- mem => instr_mem,
-			-- opcode => "000011",
-			-- sourceReg1 => "01110",
-			-- writeReg => "01111",
-			-- immediate => std_logic_vector(to_unsigned(1, 16)),
-			-- address => 6
-		-- );
+		load_I_instruction(
+			mem => instr_mem,
+			opcode => "000011",
+			sourceReg1 => "01110",
+			writeReg => "01111",
+			immediate => std_logic_vector(to_unsigned(1, 16)),
+			address => 6
+		);
 		
-		-- load_I_instruction(
-			-- mem => instr_mem,
-			-- opcode => "000100",
-			-- sourceReg1 => "01110",
-			-- writeReg => "01111",
-			-- immediate => std_logic_vector(to_unsigned(4, 16)),
-			-- address => 7
-		-- );
+		load_I_instruction(
+			mem => instr_mem,
+			opcode => "000100",
+			sourceReg1 => "01110",
+			writeReg => "01111",
+			immediate => std_logic_vector(to_unsigned(4, 16)),
+			address => 7
+		);
+		load_I_instruction(
+			mem => instr_mem,
+			opcode => "000101",
+			sourceReg1 => "10000",
+			writeReg => "10011",
+			immediate => std_logic_vector(to_signed(-8, 16)),
+			address => 8
+		);
+		
+		load_J_instruction(
+			mem => instr_mem,
+			opcode => "000110",
+			immediate => std_logic_vector(to_signed(1, 26)),
+			address => 9
+		);
         wait; -- Per interrompere il processo
     end process;
 
