@@ -4,6 +4,8 @@ use ieee.numeric_std.all;
 use std.textio.all;
 use work.ControlUnitSignals.all;
 use work.PCsignals.all;
+use work.RegisterBankSignals.all;
+use work.IF_ID_signals.all;
 
 entity InstructionMemory_tb is
 end InstructionMemory_tb;
@@ -30,7 +32,12 @@ architecture Behavioral of InstructionMemory_tb is
 	
 	signal PC_IN: PCInputs := initialPCInputs;
 	signal PC_OUT: PCOutputs := initialPCOutputs;
-
+	
+	signal RB_IN: RegisterBankInputs := initialRBInputs;
+	signal RB_OUT: RegisterBankOutputs := initialRBOutputs;
+	
+	signal IF_ID_IN: IF_ID_Inputs := initialIF_IDInputs;
+	signal IF_ID_OUT: IF_ID_Outputs := initialIF_IDOutputs;
 begin
 	uut_IM: InstructionMemory
 		Port map (
@@ -55,7 +62,23 @@ begin
 			PC_IN => PC_IN,
 			PC_OUT => PC_OUT
 		);
-		
+	
+	uut_RB: entity work.RegisterBank32x32
+		Port map (
+			clk => clk,
+			reset => reset,
+			RB_IN => RB_IN,
+			RB_OUT => RB_OUT
+		);
+	
+	uut_IF_ID: entity work.IF_ID
+		Port map (
+			clk => clk,
+			reset => reset,
+			IF_ID_IN => IF_ID_IN,
+			IF_ID_OUT => IF_ID_OUT
+		);
+	
 	process
 	begin
 		clk <= '0';
@@ -78,7 +101,9 @@ begin
 			if reset = '0' then 
 				PC_IN.PCin <= std_logic_vector(unsigned(PC_OUT.PCout) + 1);
 				addressMem <= PC_OUT.PCout;
-				CU_IN.opcode <= instructionMem(31 downto 26);
+				IF_ID_IN.PC <= PC_OUT.PCout;
+				IF_ID_IN.instruction <= instructionMem; 
+				CU_IN.opcode <= IF_ID_OUT.instruction(31 downto 26);
 			end if;
 		end if;
 	end process;

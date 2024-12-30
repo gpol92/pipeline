@@ -33,6 +33,7 @@ sim:/tb_cpu/PC_IN \
 sim:/tb_cpu/PC_OUT \
 sim:/tb_cpu/RB_IN \
 sim:/tb_cpu/RB_OUT \
+sim:/tb_cpu/uut_RB/registers \
 sim:/tb_cpu/ALU_IN \
 sim:/tb_cpu/ALU_OUT \
 sim:/tb_cpu/ID_EX_IN \
@@ -44,4 +45,4 @@ sim:/tb_cpu/EX_MEM_OUT \
 sim:/tb_cpu/uut_CU/currentState \
 sim:/tb_cpu/MEM_WB_IN \
 sim:/tb_cpu/MEM_WB_OUT
-run 600 ns
+run 3 us

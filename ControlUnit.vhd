@@ -144,6 +144,9 @@ begin
                 CU_OUT.ALUop <= "0000";
                 CU_OUT.RegDst <= '0';
                 CU_OUT.RegWrite <= '0';
+				CU_OUT.MemRead <= '0';
+                CU_OUT.MemToReg <= '0';
+                CU_OUT.MemWrite <= '0';
                 nextState <= FETCH;
         end case;
     end process;
