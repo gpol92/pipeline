@@ -7,8 +7,8 @@ entity IF_ID_tb is
 end IF_ID_tb;
 
 architecture Behavioral of IF_ID_tb is
-	signal IF_ID_IN: IF_ID_signals;
-	signal IF_ID_OUT: IF_ID_signals;
+	signal IF_ID_IN: IF_ID_Inputs;
+	signal IF_ID_OUT: IF_ID_Outputs;
 	signal clk: std_logic := '0';
 	signal reset: std_logic := '1';
 begin
@@ -37,11 +37,17 @@ begin
 	
 	process
 	begin
+		IF_ID_IN.stall <= '0';
 		IF_ID_IN.PC <= std_logic_vector(to_unsigned(0, 32));
 		IF_ID_IN.instruction <= std_logic_vector(to_unsigned(4, 32));
 		wait for 20 ns;
 		IF_ID_IN.PC <= std_logic_vector(unsigned(IF_ID_IN.PC) + 1);
 		IF_ID_IN.instruction <= std_logic_vector(to_unsigned(5, 32));
+		IF_ID_IN.stall <= '1';
+		IF_ID_IN.PC <= std_logic_vector(unsigned(IF_ID_IN.PC) + 1);
+		wait for 40 ns;
+		IF_ID_IN.stall <= '0';
+		IF_ID_IN.PC <= std_logic_vector(unsigned(IF_ID_IN.PC) + 1);
 		wait;
 	end process;
 end Behavioral;

@@ -13,23 +13,24 @@ entity RegisterBank32x32 is
 end RegisterBank32x32;
 
 architecture Behavioral of RegisterBank32x32 is
-	type reg_array is array (31 downto 0) of std_logic_vector(31 downto 0);
+	type reg_array is array (0 to 31) of std_logic_vector(31 downto 0);
 	signal registers: reg_array := (others => (others => '0'));
+	signal debug_RegWrite: std_logic;
+	signal debug_write_address: std_logic_vector(4 downto 0);
 begin
 	process(clk)
 	begin
 		if reset = '1' then
-			-- Azzeramento di tutti i registri in caso di reset
 			registers <= (others => (others => '0'));
 		elsif rising_edge(clk) then
-			-- Scrittura nel registro selezionato se abilitata
+			debug_RegWrite <= RB_IN.RegWrite;
+			debug_write_address <= RB_IN.write_address;
 			if RB_IN.RegWrite = '1' and RB_IN.write_address /= "00000" then
 				registers(to_integer(unsigned(RB_IN.write_address))) <= RB_IN.write_data;
 			end if;
 		end if;
 	end process;
 
-	-- Lettura dai registri
 	RB_OUT.read_data1 <= registers(to_integer(unsigned(RB_IN.read_address1)));
 	RB_OUT.read_data2 <= registers(to_integer(unsigned(RB_IN.read_address2)));
 

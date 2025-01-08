@@ -16,14 +16,18 @@ architecture Behavioral of IF_ID is
 	signal PC_reg: std_logic_vector(31 downto 0);
 	signal Instruction_reg: std_logic_vector(31 downto 0);
 begin
-	process(clk, reset)
+	process(clk, reset, IF_ID_IN.stall)
 	begin
 		if reset = '1' then
 			PC_reg <= (others => '0');
 			Instruction_reg <= (others => '0');
 		elsif rising_edge(clk) then
-			PC_reg <= IF_ID_IN.PC;
-			Instruction_reg <= IF_ID_IN.instruction;
+			if IF_ID_IN.stall then
+				PC_reg <= PC_reg;
+			else
+				PC_reg <= IF_ID_IN.PC;
+				Instruction_reg <= IF_ID_IN.instruction;
+			end if;
 		end if;
 	end process;
 	

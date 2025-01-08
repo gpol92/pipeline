@@ -45,4 +45,4 @@ sim:/tb_cpu/EX_MEM_OUT \
 sim:/tb_cpu/uut_CU/currentState \
 sim:/tb_cpu/MEM_WB_IN \
 sim:/tb_cpu/MEM_WB_OUT
-run 3 us
+run 1.5 us

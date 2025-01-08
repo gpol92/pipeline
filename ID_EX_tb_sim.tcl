@@ -1,6 +1,10 @@
-vcom -work work C:/Users/gpoli/pipeline/ID_EX_signals.vhd
-vcom -work work C:/Users/gpoli/pipeline/ID_EX.vhd
-vcom -work work C:/Users/gpoli/pipeline/ID_EX_tb.vhd
+#vcom -work work C:/Users/gpoli/pipeline/ID_EX_signals.vhd
+#vcom -work work C:/Users/gpoli/pipeline/ID_EX.vhd
+#vcom -work work C:/Users/gpoli/pipeline/ID_EX_tb.vhd
+
+vcom -work work C:/intelFPGA/pipeline/ID_EX_signals.vhd -quiet
+vcom -work work C:/intelFPGA/pipeline/ID_EX.vhd -quiet
+vcom -work work C:/intelFPGA/pipeline/ID_EX_tb.vhd -quiet
 
 vsim work.id_ex_tb
 add wave  \

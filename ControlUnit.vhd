@@ -16,8 +16,8 @@ architecture Behavioral of ControlUnit is
     type state is (FETCH, DECODE, EXECUTE, MEMORY, WRITE_BACK);
     signal currentState, nextState: state;
     attribute keep: string;
-	attribute keep of currentState: signal is "true";
-	
+    attribute keep of currentState: signal is "true";
+    
     constant immOp: std_logic_vector(5 downto 0) := "000001";
     constant arithOp: std_logic_vector(5 downto 0) := "000010";
     constant loadOp: std_logic_vector(5 downto 0) := "000011";
@@ -60,7 +60,7 @@ begin
                         CU_OUT.ALUsrc <= '1';
                         CU_OUT.ALUop <= "0001";
                         CU_OUT.RegDst <= '0';
-                        CU_OUT.RegWrite <= '1';
+                        CU_OUT.RegWrite <= '0'; -- Impostato a 0 durante DECODE
                         CU_OUT.MemRead <= '0';
                         CU_OUT.MemToReg <= '0';
                         CU_OUT.MemWrite <= '0';
@@ -69,7 +69,7 @@ begin
                         CU_OUT.ALUsrc <= '0';
                         CU_OUT.ALUop <= "0010";
                         CU_OUT.RegDst <= '1';
-                        CU_OUT.RegWrite <= '1';
+                        CU_OUT.RegWrite <= '0'; -- Impostato a 0 durante DECODE
                         CU_OUT.MemRead <= '0';
                         CU_OUT.MemToReg <= '0';
                         CU_OUT.MemWrite <= '0';
@@ -78,7 +78,7 @@ begin
                         CU_OUT.ALUsrc <= '1';
                         CU_OUT.ALUop <= "0010";
                         CU_OUT.RegDst <= '0';
-                        CU_OUT.RegWrite <= '1';
+                        CU_OUT.RegWrite <= '0'; -- Impostato a 0 durante DECODE
                         CU_OUT.MemRead <= '1';
                         CU_OUT.MemToReg <= '1';
                         CU_OUT.MemWrite <= '0';
@@ -121,21 +121,22 @@ begin
                 nextState <= EXECUTE;
             when EXECUTE =>
                 case CU_IN.opcode is
-					when loadOp | storeOp =>
-						nextState <= MEMORY;
-					when immOp | arithOp =>
-						nextState <= WRITE_BACK;
-					when others =>
-						nextState <= FETCH;
-				end case;
+                    when loadOp | storeOp =>
+                        nextState <= MEMORY;
+                    when immOp | arithOp =>
+						CU_OUT.RegWrite <= '1';
+                        nextState <= WRITE_BACK;
+                    when others =>
+                        nextState <= FETCH;
+                end case;
             when MEMORY =>
                 CU_OUT.ALUsrc <= '0';
-				case CU_IN.opcode is
-					when loadOp =>
-						nextState <= WRITE_BACK;
-					when others =>
-						nextState <= FETCH;
-				end case;
+                case CU_IN.opcode is
+                    when loadOp =>
+                        nextState <= WRITE_BACK;
+                    when others =>
+                        nextState <= FETCH;
+                end case;
             when WRITE_BACK =>
                 CU_OUT.ALUsrc <= '0';
                 nextState <= FETCH;
@@ -144,7 +145,7 @@ begin
                 CU_OUT.ALUop <= "0000";
                 CU_OUT.RegDst <= '0';
                 CU_OUT.RegWrite <= '0';
-				CU_OUT.MemRead <= '0';
+                CU_OUT.MemRead <= '0';
                 CU_OUT.MemToReg <= '0';
                 CU_OUT.MemWrite <= '0';
                 nextState <= FETCH;
