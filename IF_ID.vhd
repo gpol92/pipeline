@@ -22,7 +22,7 @@ begin
 			PC_reg <= (others => '0');
 			Instruction_reg <= (others => '0');
 		elsif rising_edge(clk) then
-			if IF_ID_IN.stall then
+			if IF_ID_IN.stall = '1' then
 				PC_reg <= PC_reg;
 			else
 				PC_reg <= IF_ID_IN.PC;

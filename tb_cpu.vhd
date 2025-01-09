@@ -33,6 +33,28 @@ architecture Behavioral of tb_cpu is
 		);
 	end component;
 	
+	component ForwardingUnit
+		Port (
+			clk: in std_logic;
+			reset: in std_logic;
+			ID_EX_RegAddr1: in std_logic_vector(4 downto 0);
+			ID_EX_RegAddr2: in std_logic_vector(4 downto 0);
+			EX_MEM_DestReg: in std_logic_vector(4 downto 0);
+			MEM_WB_DestReg: in std_logic_vector(4 downto 0);
+			forwardA: out std_logic_vector(1 downto 0);
+			forwardB: out std_logic_vector(1 downto 0)
+		);
+	end component;
+	
+	component MEM_WB_MUX 
+		Port (
+			MemToReg: in std_logic;
+			MemDataOut: in std_logic_vector(31 downto 0);
+			ALUresult: in std_logic_vector(31 downto 0);
+			MUXout: out std_logic_vector(31 downto 0)
+		);
+	end component;
+	
 	signal clk: std_logic := '0';
 	signal reset: std_logic := '1';
 	signal pcSrc: std_logic := '0';
@@ -66,6 +88,18 @@ architecture Behavioral of tb_cpu is
 	
 	signal DM_IN: DataMemoryInputs := initialDMInputs;
 	signal DM_OUT: DataMemoryOutputs := initialDMOutputs;
+	
+	signal ID_EX_RegAddr1: std_logic_vector(4 downto 0) := (others => '0');
+	signal ID_EX_RegAddr2: std_logic_vector(4 downto 0) := (others => '0');
+	signal EX_MEM_DestReg: std_logic_vector(4 downto 0) := (others => '0');
+	signal MEM_WB_DestReg: std_logic_vector(4 downto 0) := (others => '0');
+	signal forwardA: std_logic_vector(1 downto 0) := "00";
+	signal forwardB: std_logic_vector(1 downto 0) := "00";
+	
+	signal MemToReg: std_logic := '0';
+	signal MemDataOut: std_logic_vector(31 downto 0) := (others => '0');
+	signal ALUresult: std_logic_vector(31 downto 0) := (others => '0');
+	signal MUXout: std_logic_vector(31 downto 0) := (others => '0');
 	
 begin
 	uut_IM: InstructionMemory
@@ -141,6 +175,26 @@ begin
 			DM_IN => DM_IN,
 			DM_OUT => DM_OUT
 		);
+	
+	uut_FU: ForwardingUnit
+		Port map (
+			clk => clk,
+			reset => reset,
+			ID_EX_RegAddr1 => ID_EX_RegAddr1,
+			ID_EX_RegAddr2 => ID_EX_RegAddr2,
+			EX_MEM_DestReg => EX_MEM_DestReg,
+			MEM_WB_DestReg => MEM_WB_DestReg,
+			forwardA => forwardA,
+			forwardB => forwardB
+		);
+		
+	uut_MW_MUX: MEM_WB_MUX
+		Port map (
+			MemToReg => MemToReg,
+			MemDataOut => MemDataOut,
+			ALUresult => ALUresult,
+			MUXout => MUXout
+		);
 		
 	process
 	begin
@@ -214,18 +268,25 @@ begin
 				DM_IN.addr <= EX_MEM_OUT.ALUresult;
 				DM_IN.data_in <= EX_MEM_OUT.ReadData2 when DM_IN.MemWrite = '1' else std_logic_vector(to_unsigned(0, 32));
 				RB_IN.write_address <= MEM_WB_OUT.DestReg;
+				ID_EX_RegAddr1 <= ID_EX_OUT.RegAddr1;
+				ID_EX_RegAddr2 <= ID_EX_OUT.RegAddr2;
+				EX_MEM_DestReg <= EX_MEM_OUT.DestReg;
+				MEM_WB_DestReg <= MEM_WB_OUT.DestReg;
 				ALU_IN.ALUop <= ID_EX_OUT.ALUop;
-				ALU_IN.opA <= ID_EX_OUT.ReadData1;
-				ALU_IN.opB <= ID_EX_OUT.ReadData2 when ID_EX_OUT.ALUsrc = '0' else ID_EX_OUT.SignExtImm;
+				ALU_IN.opA <= ID_EX_OUT.ReadData1 when forwardA = "00" else EX_MEM_OUT.ALUresult when forwardA = "10" else MUXout when forwardA = "01";
+				ALU_IN.opB <= ID_EX_OUT.ReadData2 when forwardB = "00" else EX_MEM_OUT.ALUresult when forwardB = "10" else MUXout when forwardB = "01";
 				ALU_IN.funct <= IF_ID_OUT.instruction(5 downto 0);
 				EX_MEM_IN.ALUresult <= ALU_OUT.ALUout;
 				MEM_WB_IN.MemDataOut <= DM_OUT.data_out;
 				MEM_WB_IN.ALUresult <= EX_MEM_OUT.ALUresult;
-				RB_IN.write_data <= MEM_WB_OUT.ALUresult when MEM_WB_OUT.MemToReg = '0' else MEM_WB_OUT.MemDataOut;	
+				MemDataOut <= MEM_WB_OUT.MemDataOut;
+				ALUresult <= MEM_WB_OUT.ALUresult;
+				MemToReg <= MEM_WB_OUT.MemToReg;
+				RB_IN.write_data <= MUXout;
 			end if;
 		end if;
-	end process;
-	
+	end process;	
+		
 	process(clk)
 	begin
 		if rising_edge(clk) then
@@ -234,6 +295,8 @@ begin
 			end if;
 		end if;
 	end process;
+	
+	
 end Behavioral;																							
 
 	
