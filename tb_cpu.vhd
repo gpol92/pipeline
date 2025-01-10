@@ -176,7 +176,7 @@ begin
 			DM_OUT => DM_OUT
 		);
 	
-	uut_FU: ForwardingUnit
+	uut_FU: entity work.ForwardingUnit
 		Port map (
 			clk => clk,
 			reset => reset,
@@ -188,7 +188,7 @@ begin
 			forwardB => forwardB
 		);
 		
-	uut_MW_MUX: MEM_WB_MUX
+	uut_MW_MUX: entity work.MEM_WB_MUX
 		Port map (
 			MemToReg => MemToReg,
 			MemDataOut => MemDataOut,
