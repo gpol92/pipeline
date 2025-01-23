@@ -93,5 +93,6 @@ sim:/tb_cpu/forwardB \
 sim:/tb_cpu/MemToReg \
 sim:/tb_cpu/MemDataOut \
 sim:/tb_cpu/ALUresult \
-sim:/tb_cpu/MUXout
+sim:/tb_cpu/MUXout \
+sim:/tb_cpu/RegWrite
 run 1.5 us

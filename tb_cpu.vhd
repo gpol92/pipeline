@@ -37,6 +37,7 @@ architecture Behavioral of tb_cpu is
 		Port (
 			clk: in std_logic;
 			reset: in std_logic;
+			RegWrite: in std_logic;
 			ID_EX_RegAddr1: in std_logic_vector(4 downto 0);
 			ID_EX_RegAddr2: in std_logic_vector(4 downto 0);
 			EX_MEM_DestReg: in std_logic_vector(4 downto 0);
@@ -95,6 +96,7 @@ architecture Behavioral of tb_cpu is
 	signal MEM_WB_DestReg: std_logic_vector(4 downto 0) := (others => '0');
 	signal forwardA: std_logic_vector(1 downto 0) := "00";
 	signal forwardB: std_logic_vector(1 downto 0) := "00";
+	signal RegWrite: std_logic;
 	
 	signal MemToReg: std_logic := '0';
 	signal MemDataOut: std_logic_vector(31 downto 0) := (others => '0');
@@ -180,6 +182,7 @@ begin
 		Port map (
 			clk => clk,
 			reset => reset,
+			RegWrite => RegWrite,
 			ID_EX_RegAddr1 => ID_EX_RegAddr1,
 			ID_EX_RegAddr2 => ID_EX_RegAddr2,
 			EX_MEM_DestReg => EX_MEM_DestReg,
@@ -279,6 +282,7 @@ begin
 				EX_MEM_IN.ALUresult <= ALU_OUT.ALUout;
 				MEM_WB_IN.MemDataOut <= DM_OUT.data_out;
 				MEM_WB_IN.ALUresult <= EX_MEM_OUT.ALUresult;
+				RegWrite <= MEM_WB_OUT.RegWrite;
 				MemDataOut <= MEM_WB_OUT.MemDataOut;
 				ALUresult <= MEM_WB_OUT.ALUresult;
 				MemToReg <= MEM_WB_OUT.MemToReg;
