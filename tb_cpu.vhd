@@ -116,6 +116,7 @@ architecture Behavioral of tb_cpu is
 	signal opAmuxOut: std_logic_vector(31 downto 0) := (others => '0');
 	signal WBresult: std_logic_vector(31 downto 0) := (others => '0');
 	signal ID_EX_ReadData1: std_logic_vector(31 downto 0) := (others => '0');
+	signal ALUresultEXMEM: std_logic_vector(31 downto 0) := (others => '0');
 begin
 	uut_IM: InstructionMemory
 		Port map (
@@ -214,7 +215,7 @@ begin
 	uut_opAmux: entity work.opAmux
 		Port map (
 			forwardA => forwardA,
-			ALUresult => ALUresult,
+			ALUresultEXMEM => ALUresultEXMEM,
 			WBresult => WBresult,
 			ID_EX_ReadData1 => ID_EX_ReadData1,
 			opAmuxOut => opAmuxOut
@@ -302,6 +303,7 @@ begin
 				EX_MEM_IN.ALUresult <= ALU_OUT.ALUout;
 				MEM_WB_IN.MemDataOut <= DM_OUT.data_out;
 				MEM_WB_IN.ALUresult <= EX_MEM_OUT.ALUresult;
+				ALUresultEXMEM <= EX_MEM_OUT.ALUresult;
 				RegWrite <= EX_MEM_OUT.RegWrite;
 				MemDataOut <= MEM_WB_OUT.MemDataOut;
 				ALUresult <= MEM_WB_OUT.ALUresult;
