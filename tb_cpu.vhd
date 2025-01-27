@@ -70,6 +70,9 @@ architecture Behavioral of tb_cpu is
 	signal reset: std_logic := '1';
 	signal pcSrc: std_logic := '0';
 	
+	constant clk_hz: integer := 1e6;
+	constant clk_period: time := 1 sec / clk_hz;
+	
 	signal IF_ID_IN: IF_ID_Inputs := initialIF_IDInputs;
 	signal IF_ID_OUT: IF_ID_Outputs := initialIF_IDOutputs;
 	
@@ -220,13 +223,7 @@ begin
 			ID_EX_ReadData1 => ID_EX_ReadData1,
 			opAmuxOut => opAmuxOut
 		);
-	process
-	begin
-		clk <= '0';
-		wait for 10 ns;
-		clk <= '1';
-		wait for 10 ns;
-	end process;
+	clk <= not clk after clk_period;
 	
 	process
 	begin
