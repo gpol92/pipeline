@@ -22,14 +22,62 @@ vcom -work work C:/intelFPGA/pipeline/tb_cpu.vhd
 # vcom -work work C:/Users/gpoli/pipeline/tb_cpu.vhd
 
 vsim work.tb_cpu
-if {[file exists wave.do]} {
-	do wave.do
+
+
+proc runClockCycles { count } {
+	variable clockPeriod
+	variable timeUnits
+	set t [expr {$clockPeriod * $count}]
+	run $t $timeUnits
 }
 
 variable clockPeriod [examine clk_period]
 echo $clockPeriod
 variable clockPeriod [string trim $clockPeriod "{}"]
 echo $clockPeriod
+
+variable timeUnits [lindex $clockPeriod 1]
+variable clockPeriod [lindex $clockPeriod 0]
+variable pcOut [examine PC_OUT.pcOut]
+echo $pcOut
+
+add wave  \
+sim:/tb_cpu/clk \
+sim:/tb_cpu/reset \
+sim:/tb_cpu/pcSrc \
+sim:/tb_cpu/addressMem \
+sim:/tb_cpu/instructionMem \
+sim:/tb_cpu/PC_IN \
+sim:/tb_cpu/PC_OUT \
+sim:/tb_cpu/RB_IN \
+sim:/tb_cpu/RB_OUT \
+sim:/tb_cpu/uut_RB/registers \
+sim:/tb_cpu/ALU_IN \
+sim:/tb_cpu/ALU_OUT \
+sim:/tb_cpu/ID_EX_IN \
+sim:/tb_cpu/ID_EX_OUT \
+sim:/tb_cpu/CU_IN \
+sim:/tb_cpu/CU_OUT \
+sim:/tb_cpu/EX_MEM_IN \
+sim:/tb_cpu/EX_MEM_OUT \
+sim:/tb_cpu/uut_CU/currentState \
+sim:/tb_cpu/MEM_WB_IN \
+sim:/tb_cpu/MEM_WB_OUT \
+sim:/tb_cpu/DM_IN \
+sim:/tb_cpu/DM_OUT \
+sim:/tb_cpu/ID_EX_RegAddr1 \
+sim:/tb_cpu/ID_EX_RegAddr2 \
+sim:/tb_cpu/EX_MEM_DestReg \
+sim:/tb_cpu/MEM_WB_DestReg \
+sim:/tb_cpu/forwardA \
+sim:/tb_cpu/forwardB \
+sim:/tb_cpu/MemToReg \
+sim:/tb_cpu/MemDataOut \
+sim:/tb_cpu/ALUresult \
+sim:/tb_cpu/MUXout \
+sim:/tb_cpu/RegWrite
+
+runClockCycles 3
 # set enableIF_ID 1
 # set enableIM 0
 # set enablePC 0
@@ -67,39 +115,5 @@ echo $clockPeriod
 # }
 # run 1.5 us
 
-# add wave  \
-# sim:/tb_cpu/clk \
-# sim:/tb_cpu/reset \
-# sim:/tb_cpu/pcSrc \
-# sim:/tb_cpu/addressMem \
-# sim:/tb_cpu/instructionMem \
-# sim:/tb_cpu/PC_IN \
-# sim:/tb_cpu/PC_OUT \
-# sim:/tb_cpu/RB_IN \
-# sim:/tb_cpu/RB_OUT \
-# sim:/tb_cpu/uut_RB/registers \
-# sim:/tb_cpu/ALU_IN \
-# sim:/tb_cpu/ALU_OUT \
-# sim:/tb_cpu/ID_EX_IN \
-# sim:/tb_cpu/ID_EX_OUT \
-# sim:/tb_cpu/CU_IN \
-# sim:/tb_cpu/CU_OUT \
-# sim:/tb_cpu/EX_MEM_IN \
-# sim:/tb_cpu/EX_MEM_OUT \
-# sim:/tb_cpu/uut_CU/currentState \
-# sim:/tb_cpu/MEM_WB_IN \
-# sim:/tb_cpu/MEM_WB_OUT \
-# sim:/tb_cpu/DM_IN \
-# sim:/tb_cpu/DM_OUT \
-# sim:/tb_cpu/ID_EX_RegAddr1 \
-# sim:/tb_cpu/ID_EX_RegAddr2 \
-# sim:/tb_cpu/EX_MEM_DestReg \
-# sim:/tb_cpu/MEM_WB_DestReg \
-# sim:/tb_cpu/forwardA \
-# sim:/tb_cpu/forwardB \
-# sim:/tb_cpu/MemToReg \
-# sim:/tb_cpu/MemDataOut \
-# sim:/tb_cpu/ALUresult \
-# sim:/tb_cpu/MUXout \
-# sim:/tb_cpu/RegWrite
+
 # run 1.5 us
