@@ -23,6 +23,12 @@ vcom -work work C:/intelFPGA/pipeline/tb_cpu.vhd
 
 vsim work.tb_cpu
 
+proc checkSignal { signalName expectedVal } {
+	set val [examine $signalName]
+	if {$val != $expectedVal} {
+		printMsg "ERROR: $signalName=$val (expected=$expectedVal)"
+	}
+}
 
 proc runClockCycles { count } {
 	variable clockPeriod
