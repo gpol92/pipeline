@@ -56,6 +56,16 @@ architecture Behavioral of tb_cpu is
 		);
 	end component;
 	
+	component opAmux 
+		Port (
+			forwardA: in std_logic_vector(1 downto 0);
+			ALUresult: in std_logic_vector(31 downto 0);
+			WBresult: in std_logic_vector(31 downto 0);
+			ID_EX_ReadData1: in std_logic_vector(31 downto 0);
+			opAmuxOut: out std_logic_vector(31 downto 0)
+		);
+	end component;
+	
 	signal clk: std_logic := '0';
 	signal reset: std_logic := '1';
 	signal pcSrc: std_logic := '0';
@@ -103,6 +113,9 @@ architecture Behavioral of tb_cpu is
 	signal ALUresult: std_logic_vector(31 downto 0) := (others => '0');
 	signal MUXout: std_logic_vector(31 downto 0) := (others => '0');
 	
+	signal opAmuxOut: std_logic_vector(31 downto 0) := (others => '0');
+	signal WBresult: std_logic_vector(31 downto 0) := (others => '0');
+	signal ID_EX_ReadData1: std_logic_vector(31 downto 0) := (others => '0');
 begin
 	uut_IM: InstructionMemory
 		Port map (
@@ -198,7 +211,14 @@ begin
 			ALUresult => ALUresult,
 			MUXout => MUXout
 		);
-		
+	uut_opAmux: entity work.opAmux
+		Port map (
+			forwardA => forwardA,
+			ALUresult => ALUresult,
+			WBresult => WBresult,
+			ID_EX_ReadData1 => ID_EX_ReadData1,
+			opAmuxOut => opAmuxOut
+		);
 	process
 	begin
 		clk <= '0';
@@ -276,13 +296,13 @@ begin
 				EX_MEM_DestReg <= EX_MEM_OUT.DestReg;
 				MEM_WB_DestReg <= MEM_WB_OUT.DestReg;
 				ALU_IN.ALUop <= ID_EX_OUT.ALUop;
-				ALU_IN.opA <= ID_EX_OUT.ReadData1 when forwardA = "00" else EX_MEM_OUT.ALUresult when forwardA = "10" else MUXout when forwardA = "01";
+				ALU_IN.opA <= opAmuxOut;
 				ALU_IN.opB <= ID_EX_OUT.ReadData2 when forwardB = "00" else EX_MEM_OUT.ALUresult when forwardB = "10" else MUXout when forwardB = "01";
 				ALU_IN.funct <= IF_ID_OUT.instruction(5 downto 0);
 				EX_MEM_IN.ALUresult <= ALU_OUT.ALUout;
 				MEM_WB_IN.MemDataOut <= DM_OUT.data_out;
 				MEM_WB_IN.ALUresult <= EX_MEM_OUT.ALUresult;
-				RegWrite <= MEM_WB_OUT.RegWrite;
+				RegWrite <= EX_MEM_OUT.RegWrite;
 				MemDataOut <= MEM_WB_OUT.MemDataOut;
 				ALUresult <= MEM_WB_OUT.ALUresult;
 				MemToReg <= MEM_WB_OUT.MemToReg;

@@ -24,7 +24,8 @@ begin
 			forwardA <= "00";
 			forwardB <= "00";
 		elsif rising_edge(clk) then
-			
+			forwardA <= "00";
+			forwardB <= "00";
 			if RegWrite = '1' then
 				-- Forwarding for A
 				if ID_EX_RegAddr1 = EX_MEM_DestReg and EX_MEM_DestReg /= "00000" then
