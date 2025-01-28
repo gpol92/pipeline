@@ -16,10 +16,6 @@ architecture Behavioral of MEM_WB_MUX is
 begin
 	process(MemToReg, MemDataOut, ALUresult)
 	begin
-		if MemToReg = '1' then
-			MUXout <= MemDataOut;
-		else 
-			MUXout <= ALUresult;
-		end if;
+		MUXout <= ALUresult when MemToReg = '0' else MemDataOut;
 	end process;
 end Behavioral;

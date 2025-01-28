@@ -45,7 +45,10 @@ echo $clockPeriod
 variable timeUnits [lindex $clockPeriod 1]
 variable clockPeriod [lindex $clockPeriod 0]
 variable pcOut [examine PC_OUT.pcOut]
+variable addressMem [examine addressMem]
+echo $addressMem
 echo $pcOut
+force $addressMem $pcOut -deposit 
 
 add wave  \
 sim:/tb_cpu/clk \
