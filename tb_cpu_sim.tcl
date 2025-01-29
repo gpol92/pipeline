@@ -23,29 +23,29 @@ vcom -work work C:/intelFPGA/pipeline/tb_cpu.vhd
 
 vsim work.tb_cpu
 
-proc checkSignal { signalName expectedVal } {
-	set val [examine $signalName]
-	if {$val != $expectedVal} {
-		printMsg "ERROR: $signalName=$val (expected=$expectedVal)"
-	}
-}
+# proc checkSignal { signalName expectedVal } {
+	# set val [examine $signalName]
+	# if {$val != $expectedVal} {
+		# printMsg "ERROR: $signalName=$val (expected=$expectedVal)"
+	# }
+# }
 
-proc runClockCycles { count } {
-	variable clockPeriod
-	variable timeUnits
-	set t [expr {$clockPeriod * $count}]
-	run $t $timeUnits
-}
+# proc runClockCycles { count } {
+	# variable clockPeriod
+	# variable timeUnits
+	# set t [expr {$clockPeriod * $count}]
+	# run $t $timeUnits
+# }
 
-variable clockPeriod [examine clk_period]
-echo $clockPeriod
-variable clockPeriod [string trim $clockPeriod "{}"]
-echo $clockPeriod
+# variable clockPeriod [examine clk_period]
+# echo $clockPeriod
+# variable clockPeriod [string trim $clockPeriod "{}"]
+# echo $clockPeriod
 
-variable timeUnits [lindex $clockPeriod 1]
-variable clockPeriod [lindex $clockPeriod 0]
-variable pcOut [examine PC_OUT.pcOut]
-echo $pcOut
+# variable timeUnits [lindex $clockPeriod 1]
+# variable clockPeriod [lindex $clockPeriod 0]
+# variable pcOut [examine PC_OUT.pcOut]
+# echo $pcOut
 
 add wave  \
 sim:/tb_cpu/clk \
@@ -53,6 +53,8 @@ sim:/tb_cpu/reset \
 sim:/tb_cpu/pcSrc \
 sim:/tb_cpu/addressMem \
 sim:/tb_cpu/instructionMem \
+sim:/tb_cpu/IF_ID_IN \
+sim:/tb_cpu/IF_ID_OUT \
 sim:/tb_cpu/PC_IN \
 sim:/tb_cpu/PC_OUT \
 sim:/tb_cpu/RB_IN \
@@ -83,7 +85,7 @@ sim:/tb_cpu/ALUresult \
 sim:/tb_cpu/MUXout \
 sim:/tb_cpu/RegWrite
 
-runClockCycles 3
+run 30 us
 # set enableIF_ID 1
 # set enableIM 0
 # set enablePC 0

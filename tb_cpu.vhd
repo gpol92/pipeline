@@ -227,7 +227,7 @@ begin
 	
 	process
 	begin
-		wait for 50 ns;
+		wait for 1 us;
 		reset <= '0';
 		wait;
 	end process;
@@ -293,6 +293,7 @@ begin
 				ID_EX_RegAddr2 <= ID_EX_OUT.RegAddr2;
 				EX_MEM_DestReg <= EX_MEM_OUT.DestReg;
 				MEM_WB_DestReg <= MEM_WB_OUT.DestReg;
+				ID_EX_ReadData1 <= ID_EX_OUT.ReadData1;
 				ALU_IN.ALUop <= ID_EX_OUT.ALUop;
 				ALU_IN.opA <= opAmuxOut;
 				ALU_IN.opB <= ID_EX_OUT.ReadData2 when forwardB = "00" else EX_MEM_OUT.ALUresult when forwardB = "10" else MUXout when forwardB = "01";
