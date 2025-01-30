@@ -84,10 +84,9 @@ begin
 			wait;
 			
 		elsif INCLUDE_REGISTER_FILE then
-			RB_IN.RegWrite <= '0';
+			/* RB_IN.RegWrite <= '0';
 			ALU_IN.ALUop <= "0000";
 			ALU_IN.opA <= RB_OUT.read_data1;
-			RB_IN.write_data <= ALU_OUT.ALUout;
 			wait for 10 ns;
 			RB_IN.RegWrite <= '1';
 			RB_IN.read_address1 <= "10000";
@@ -98,7 +97,7 @@ begin
 			RB_IN.write_address <= "10000";
 			RB_IN.write_data <= ALU_OUT.ALUout;
 			wait for 10 ns;
-			RB_IN.RegWrite <= '0';
+			RB_IN.RegWrite <= '0'; */
 			wait;
 		end if;
     end process;
