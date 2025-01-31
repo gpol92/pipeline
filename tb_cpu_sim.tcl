@@ -75,6 +75,12 @@ proc checkSignal { signalName expectedVal } {
 force instructionMem [format "%032b" 0] -deposit
 set instruction [examine instructionMem]
 
+force IF_ID_IN.instruction [format "%032b" 0] -deposit
+set instructionIFIDIN [examine IF_ID_IN.instruction]
+
+force IF_ID_OUT.instruction [format "%032b" 0] -deposit
+set instructionIFIDOUT [examine IF_ID_OUT.instruction]
+
 force ID_EX_OUT.PC [format "%032b" 0] -deposit
 set idex_PCout [examine ID_EX_OUT.PC]
 
@@ -87,15 +93,15 @@ set branchEXMEM [examine EX_MEM_OUT.Branch]
 force pcSrc 0 -deposit
 set PCsrc 0
 
-force CU_IN.opcode [format "%06b" 0] -deposit
+force CU_IN.opcode [format "%0*b" 6 0] -deposit
 set opcodeCU [examine CU_IN.opcode]
 
-force PC_IN.PCin [format "%032b" 0] -deposit
-force PC_OUT.PCout [format "%032b" 0] -deposit
+force PC_IN.PCin [format "%0*b" 32 0] -deposit
+force PC_OUT.PCout [format "%0*b" 32 0] -deposit
 set pcIn [examine PC_IN.PCin]
 set pcOut [examine PC_OUT.PCout]
 
-force addressMem [format "%032b" 0] -deposit
+force addressMem [format "%0*b" 32 0] -deposit
 set addr3ssMem [examine addressMem]
 
 set totalTime 10
@@ -105,11 +111,13 @@ for {set time 0} {$time < $totalTime} {incr time 1} {
     run 1 us
     
     # Aggiorna opcode in base all'istruzione
-    set opcodeCU [string range $instruction 31 26]
-    force CU_IN.opcode [format "%06b" [expr {$opcodeCU}]] -deposit
+    set opcodeCU [string range $instructionIFIDOUT 26 31]
+	echo "IF_ID_OUT.instruction $instructionIFIDOUT"
+	echo "Opcode $opcodeCU"
+    force CU_IN.opcode [format "%0*b" 6 $opcodeCU] -deposit
     
     # Verifica condizione di branch
-    if {[expr {0b$opcodeCU}] == 6} {
+    if {$opcodeCU == 6} {
         if {[examine ALU_OUT.ALUout] == 0} {
             set zeroEXMEM 1
             set branchEXMEM 1
