@@ -2,44 +2,44 @@
 
 .main clear
 quit -sim
-vcom -work work C:/Users/gpoli/pipeline/InstructionMemory.vhd
-vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/ALUSignals.vhd 
-vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/ALU.vhd 
-vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/MEM_WB_signals.vhd
-vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/MEM_WB.vhd
-vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/EX_MEM_signals.vhd
-vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/EX_MEM.vhd
-vcom -work work C:/Users/gpoli/pipeline/RegisterBankSignals.vhd
-vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/RegisterFile.vhd
-vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/ID_EX_signals.vhd
-vcom -work work C:/Users/gpoli/pipeline/ID_EX.vhd
-vcom -work work C:/Users/gpoli/pipeline/ControlUnitSignals.vhd
-vcom -work work C:/Users/gpoli/pipeline/ControlUnit.vhd
-vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/IF_ID_signals.vhd
-vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/IF_ID.vhd
-vcom -work work C:/Users/gpoli/pipeline/PCsignals.vhd
-vcom -work work C:/Users/gpoli/pipeline/PC.vhd
-vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/tb_cpu.vhd
+# vcom -work work C:/Users/gpoli/pipeline/InstructionMemory.vhd
+# vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/ALUSignals.vhd 
+# vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/ALU.vhd 
+# vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/MEM_WB_signals.vhd
+# vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/MEM_WB.vhd
+# vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/EX_MEM_signals.vhd
+# vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/EX_MEM.vhd
+# vcom -work work C:/Users/gpoli/pipeline/RegisterBankSignals.vhd
+# vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/RegisterFile.vhd
+# vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/ID_EX_signals.vhd
+# vcom -work work C:/Users/gpoli/pipeline/ID_EX.vhd
+# vcom -work work C:/Users/gpoli/pipeline/ControlUnitSignals.vhd
+# vcom -work work C:/Users/gpoli/pipeline/ControlUnit.vhd
+# vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/IF_ID_signals.vhd
+# vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/IF_ID.vhd
+# vcom -work work C:/Users/gpoli/pipeline/PCsignals.vhd
+# vcom -work work C:/Users/gpoli/pipeline/PC.vhd
+# vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/tb_cpu.vhd
 
 
-# vcom -work work C:/intelFPGA/pipeline/ForwardingUnit.vhd -quiet
-# vcom -work work C:/intelFPGA/pipeline/MEM_WB_MUX.vhd -quiet
-# vcom -work work C:/intelFPGA/pipeline/InstructionMemory.vhd -quiet
-# vcom -work work C:/intelFPGA/pipeline/MEM_WB_signals.vhd -quiet
-# vcom -work work C:/intelFPGA/pipeline/MEM_WB.vhd -quiet
-# vcom -work work C:/intelFPGA/pipeline/EX_MEM_signals.vhd
-# vcom -work work C:/intelFPGA/pipeline/EX_MEM.vhd
-# vcom -work work C:/intelFPGA/pipeline/RegisterBankSignals.vhd
-# vcom -work work C:/intelFPGA/pipeline/RegisterFile.vhd
-# vcom -work work C:/intelFPGA/pipeline/ID_EX_signals.vhd
-# vcom -work work C:/intelFPGA/pipeline/ID_EX.vhd
-# vcom -work work C:/intelFPGA/pipeline/ControlUnitSignals.vhd
-# vcom -work work C:/intelFPGA/pipeline/ControlUnit.vhd
-# vcom -work work C:/intelFPGA/pipeline/IF_ID_signals.vhd
-# vcom -work work C:/intelFPGA/pipeline/IF_ID.vhd
-# vcom -work work C:/intelFPGA/pipeline/PCsignals.vhd
-# vcom -work work C:/intelFPGA/pipeline/PC.vhd
-# vcom -work work C:/intelFPGA/pipeline/tb_cpu.vhd
+vcom -work work C:/intelFPGA/pipeline/ForwardingUnit.vhd -quiet
+vcom -work work C:/intelFPGA/pipeline/MEM_WB_MUX.vhd -quiet
+vcom -work work C:/intelFPGA/pipeline/InstructionMemory.vhd -quiet
+vcom -work work C:/intelFPGA/pipeline/MEM_WB_signals.vhd -quiet
+vcom -work work C:/intelFPGA/pipeline/MEM_WB.vhd -quiet
+vcom -work work C:/intelFPGA/pipeline/EX_MEM_signals.vhd
+vcom -work work C:/intelFPGA/pipeline/EX_MEM.vhd
+vcom -work work C:/intelFPGA/pipeline/RegisterBankSignals.vhd
+vcom -work work C:/intelFPGA/pipeline/RegisterFile.vhd
+vcom -work work C:/intelFPGA/pipeline/ID_EX_signals.vhd
+vcom -work work C:/intelFPGA/pipeline/ID_EX.vhd
+vcom -work work C:/intelFPGA/pipeline/ControlUnitSignals.vhd
+vcom -work work C:/intelFPGA/pipeline/ControlUnit.vhd
+vcom -work work C:/intelFPGA/pipeline/IF_ID_signals.vhd
+vcom -work work C:/intelFPGA/pipeline/IF_ID.vhd
+vcom -work work C:/intelFPGA/pipeline/PCsignals.vhd
+vcom -work work C:/intelFPGA/pipeline/PC.vhd
+vcom -work work C:/intelFPGA/pipeline/tb_cpu.vhd
 
 # vcom -work work C:/Users/gpoli/pipeline/InstructionMemory.vhd
 # vcom -work work C:/Users/gpoli/pipeline/tb_cpu.vhd
@@ -51,7 +51,7 @@ proc checkSignal { signalName expectedVal } {
 	if {$val != $expectedVal} {
 		echo "ERROR: $signalName=$val (expected=$expectedVal)"
 	} else {
-		echo "$signalName has correct value"
+		echo "$signalName has correct value $expectedVal"
 	}
 }
 
@@ -69,19 +69,28 @@ proc checkSignal { signalName expectedVal } {
 
 # variable timeUnits [lindex $clockPeriod 1]
 # variable clockPeriod [lindex $clockPeriod 0]
-force PC_IN.PCin [format "%0*b" 32 0] -deposit
-force PC_OUT.PCOut [format "%0*b" 32 0] -deposit
-set totalTime 20
+
+set jumpPC [format "%0*b" 32 0]
+set jumpedPC [format "%0*b" 32 0]
+
+set pcSrc 0
+force PC_IN.PCin [format "%032b" 0] -deposit
+force PC_OUT.PCout [format "%032b" 0] -deposit
+set pcIn [examine PC_IN.PCin]
+set totalTime 10
 set count 0
-for {set time 0} {$time < $totalTime} {incr time 10} {
-	run 10 ns
-	
-	checkSignal PC_IN.PCin [format "%0*b" 32 $count]
-	checkSignal PC_OUT.PCout [format "%0*b" 32 $count]
-	set pcOut [examine PC_OUT.PCout]
-	echo $pcIn
-	echo $count
-	incr count 1
+for {set time 0} {$time < $totalTime} {incr time 1} {
+    run 1 us
+    checkSignal PC_IN.PCin [format "%032b" $count]
+    checkSignal PC_OUT.PCout [format "%032b" $count]
+    set pcOut [examine PC_OUT.PCout]
+    echo "Count is $count"
+    if {$pcSrc == 0} {
+        incr pcIn 1
+		force PC_IN.PCin [format "%032b" $pcIn] -deposit
+    }
+    incr count 1
+	force PC_OUT.PCout $pcOut -deposit 
 }
 
 

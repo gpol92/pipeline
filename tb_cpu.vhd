@@ -233,7 +233,7 @@ begin
 	end process;
 	
 	-- process(clk)
-		-- -- variable PCout: std_logic_vector(31 downto 0) := (others => '0');
+		-- variable PCout: std_logic_vector(31 downto 0) := (others => '0');
 		-- variable jumpPC: std_logic_vector(31 downto 0) := (others => '0');
 		-- variable jumpedPC: std_logic_vector(31 downto 0) := (others => '0');
 	-- begin
@@ -265,7 +265,7 @@ begin
 				-- EX_MEM_IN.Branch <= ID_EX_OUT.Branch;
 				-- EX_MEM_IN.zero <= ALU_OUT.zero;
 				
-				-- -- PCout := PC_OUT.PCout;
+				-- PCout := PC_OUT.PCout;
 				-- jumpPC := std_logic_vector(to_unsigned(0, 6)) & IF_ID_OUT.instruction(25 downto 0);
 				-- jumpedPC := std_logic_vector(unsigned(ID_EX_OUT.PC) + unsigned(jumpPC));
 				-- PC_IN.PCin <= std_logic_vector(unsigned(ID_EX_OUT.PC) + 1) when pcSrc = '0' else jumpedPC;
