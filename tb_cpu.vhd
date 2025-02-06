@@ -227,12 +227,12 @@ begin
 	
 	process
 	begin
-		wait for 1 us;
+		wait for 1.5 us;
 		reset <= '0';
 		wait;
 	end process;
 	
-	-- process(clk)
+	-- /* process(clk)
 		-- variable PCout: std_logic_vector(31 downto 0) := (others => '0');
 		-- variable jumpPC: std_logic_vector(31 downto 0) := (others => '0');
 		-- variable jumpedPC: std_logic_vector(31 downto 0) := (others => '0');
@@ -271,54 +271,54 @@ begin
 				-- PC_IN.PCin <= std_logic_vector(unsigned(ID_EX_OUT.PC) + 1) when pcSrc = '0' else jumpedPC;
 			-- end if;
 		-- end if;
-	-- end process;
+	-- end process; */
 	
-	-- process(clk)
-	-- begin	
-		-- if rising_edge(clk) then
-			-- if reset = '0' then
-				-- ID_EX_IN.RegAddr1 <= IF_ID_OUT.instruction(20 downto 16);
-				-- ID_EX_IN.RegAddr2 <= IF_ID_OUT.instruction(15 downto 11);
-				-- ID_EX_IN.SignExtImm <= std_logic_vector(resize(signed(IF_ID_OUT.instruction(15 downto 0)), 32));
-				-- EX_MEM_IN.DestReg <= ID_EX_OUT.RegAddr1 when ID_EX_OUT.RegDst = '0' else ID_EX_OUT.RegAddr2;
-				-- EX_MEM_IN.ReadData2 <= ID_EX_OUT.ReadData2;
-				-- MEM_WB_IN.DestReg <= EX_MEM_OUT.DestReg;
-				-- MEM_WB_IN.MemToReg <= EX_MEM_OUT.MemToReg;
-				-- DM_IN.MemRead <= EX_MEM_OUT.MemRead;
-				-- DM_IN.MemWrite <= EX_MEM_OUT.MemWrite;
-				-- DM_IN.addr <= EX_MEM_OUT.ALUresult;
-				-- DM_IN.data_in <= EX_MEM_OUT.ReadData2 when DM_IN.MemWrite = '1' else std_logic_vector(to_unsigned(0, 32));
-				-- RB_IN.write_address <= MEM_WB_OUT.DestReg;
-				-- ID_EX_RegAddr1 <= ID_EX_OUT.RegAddr1;
-				-- ID_EX_RegAddr2 <= ID_EX_OUT.RegAddr2;
-				-- EX_MEM_DestReg <= EX_MEM_OUT.DestReg;
-				-- MEM_WB_DestReg <= MEM_WB_OUT.DestReg;
-				-- ID_EX_ReadData1 <= ID_EX_OUT.ReadData1;
-				-- ALU_IN.ALUop <= ID_EX_OUT.ALUop;
-				-- ALU_IN.opA <= opAmuxOut;
-				-- ALU_IN.opB <= ID_EX_OUT.ReadData2 when forwardB = "00" else EX_MEM_OUT.ALUresult when forwardB = "10" else MUXout when forwardB = "01";
-				-- ALU_IN.funct <= IF_ID_OUT.instruction(5 downto 0);
-				-- EX_MEM_IN.ALUresult <= ALU_OUT.ALUout;
-				-- MEM_WB_IN.MemDataOut <= DM_OUT.data_out;
-				-- MEM_WB_IN.ALUresult <= EX_MEM_OUT.ALUresult;
-				-- ALUresultEXMEM <= EX_MEM_OUT.ALUresult;
-				-- RegWrite <= EX_MEM_OUT.RegWrite;
-				-- MemDataOut <= MEM_WB_OUT.MemDataOut;
-				-- ALUresult <= MEM_WB_OUT.ALUresult;
-				-- MemToReg <= MEM_WB_OUT.MemToReg;
-				-- RB_IN.write_data <= MUXout;
-			-- end if;
-		-- end if;
-	-- end process;	
+	process(clk)
+	begin	
+		if rising_edge(clk) then
+			if reset = '0' then
+				ID_EX_IN.RegAddr1 <= IF_ID_OUT.instruction(20 downto 16);
+				ID_EX_IN.RegAddr2 <= IF_ID_OUT.instruction(15 downto 11);
+				ID_EX_IN.SignExtImm <= std_logic_vector(resize(signed(IF_ID_OUT.instruction(15 downto 0)), 32));
+				EX_MEM_IN.DestReg <= ID_EX_OUT.RegAddr1 when ID_EX_OUT.RegDst = '0' else ID_EX_OUT.RegAddr2;
+				EX_MEM_IN.ReadData2 <= ID_EX_OUT.ReadData2;
+				MEM_WB_IN.DestReg <= EX_MEM_OUT.DestReg;
+				MEM_WB_IN.MemToReg <= EX_MEM_OUT.MemToReg;
+				DM_IN.MemRead <= EX_MEM_OUT.MemRead;
+				DM_IN.MemWrite <= EX_MEM_OUT.MemWrite;
+				DM_IN.addr <= EX_MEM_OUT.ALUresult;
+				DM_IN.data_in <= EX_MEM_OUT.ReadData2 when DM_IN.MemWrite = '1' else std_logic_vector(to_unsigned(0, 32));
+				RB_IN.write_address <= MEM_WB_OUT.DestReg;
+				ID_EX_RegAddr1 <= ID_EX_OUT.RegAddr1;
+				ID_EX_RegAddr2 <= ID_EX_OUT.RegAddr2;
+				EX_MEM_DestReg <= EX_MEM_OUT.DestReg;
+				MEM_WB_DestReg <= MEM_WB_OUT.DestReg;
+				ID_EX_ReadData1 <= ID_EX_OUT.ReadData1;
+				ALU_IN.ALUop <= ID_EX_OUT.ALUop;
+				ALU_IN.opA <= opAmuxOut;
+				ALU_IN.opB <= ID_EX_OUT.ReadData2 when forwardB = "00" else EX_MEM_OUT.ALUresult when forwardB = "10" else MUXout when forwardB = "01";
+				ALU_IN.funct <= IF_ID_OUT.instruction(5 downto 0);
+				EX_MEM_IN.ALUresult <= ALU_OUT.ALUout;
+				MEM_WB_IN.MemDataOut <= DM_OUT.data_out;
+				MEM_WB_IN.ALUresult <= EX_MEM_OUT.ALUresult;
+				ALUresultEXMEM <= EX_MEM_OUT.ALUresult;
+				RegWrite <= EX_MEM_OUT.RegWrite;
+				MemDataOut <= MEM_WB_OUT.MemDataOut;
+				ALUresult <= MEM_WB_OUT.ALUresult;
+				MemToReg <= MEM_WB_OUT.MemToReg;
+				RB_IN.write_data <= MUXout;
+			end if;
+		end if;
+	end process;	
 		
-	-- process(clk)
-	-- begin
-		-- if rising_edge(clk) then
-			-- if reset = '0' then	
-				-- pcSrc <= EX_MEM_OUT.zero and EX_MEM_OUT.Branch;
-			-- end if;
-		-- end if;
-	-- end process;
+	process(clk)
+	begin
+		if rising_edge(clk) then
+			if reset = '0' then	
+				pcSrc <= EX_MEM_OUT.zero and EX_MEM_OUT.Branch;
+			end if;
+		end if;
+	end process;
 	
 	
 end Behavioral;																							
