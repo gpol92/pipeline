@@ -2,44 +2,44 @@
 
 .main clear
 quit -sim
-# vcom -work work C:/Users/gpoli/pipeline/InstructionMemory.vhd
-# vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/ALUSignals.vhd 
-# vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/ALU.vhd 
-# vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/MEM_WB_signals.vhd
-# vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/MEM_WB.vhd
-# vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/EX_MEM_signals.vhd
-# vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/EX_MEM.vhd
-# vcom -work work C:/Users/gpoli/pipeline/RegisterBankSignals.vhd
-# vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/RegisterFile.vhd
-# vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/ID_EX_signals.vhd
-# vcom -work work C:/Users/gpoli/pipeline/ID_EX.vhd
-# vcom -work work C:/Users/gpoli/pipeline/ControlUnitSignals.vhd
-# vcom -work work C:/Users/gpoli/pipeline/ControlUnit.vhd
-# vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/IF_ID_signals.vhd
-# vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/IF_ID.vhd
-# vcom -work work C:/Users/gpoli/pipeline/PCsignals.vhd
-# vcom -work work C:/Users/gpoli/pipeline/PC.vhd
-# vcom -reportprogress 300 -work work C:/Users/gpoli/pipeline/tb_cpu.vhd
+vcom -work work C:/Users/gpoli/pipeline/InstructionMemory.vhd -quiet
+vcom -work work C:/Users/gpoli/pipeline/ALUSignals.vhd -quiet
+vcom -work work C:/Users/gpoli/pipeline/ALU.vhd -quiet
+vcom -work work C:/Users/gpoli/pipeline/MEM_WB_signals.vhd -quiet
+vcom -work work C:/Users/gpoli/pipeline/MEM_WB.vhd -quiet
+vcom -work work C:/Users/gpoli/pipeline/EX_MEM_signals.vhd -quiet
+vcom -work work C:/Users/gpoli/pipeline/EX_MEM.vhd -quiet
+vcom -work work C:/Users/gpoli/pipeline/RegisterBankSignals.vhd -quiet
+vcom -work work C:/Users/gpoli/pipeline/RegisterFile.vhd -quiet
+vcom -work work C:/Users/gpoli/pipeline/ID_EX_signals.vhd -quiet
+vcom -work work C:/Users/gpoli/pipeline/ID_EX.vhd -quiet
+vcom -work work C:/Users/gpoli/pipeline/ControlUnitSignals.vhd -quiet
+vcom -work work C:/Users/gpoli/pipeline/ControlUnit.vhd -quiet
+vcom -work work C:/Users/gpoli/pipeline/IF_ID_signals.vhd -quiet
+vcom -work work C:/Users/gpoli/pipeline/IF_ID.vhd -quiet
+vcom -work work C:/Users/gpoli/pipeline/PCsignals.vhd -quiet
+vcom -work work C:/Users/gpoli/pipeline/PC.vhd -quiet
+vcom -work work C:/Users/gpoli/pipeline/tb_cpu.vhd -quiet
 
 
-vcom -work work C:/intelFPGA/pipeline/ForwardingUnit.vhd -quiet
-vcom -work work C:/intelFPGA/pipeline/MEM_WB_MUX.vhd -quiet
-vcom -work work C:/intelFPGA/pipeline/InstructionMemory.vhd -quiet
-vcom -work work C:/intelFPGA/pipeline/MEM_WB_signals.vhd -quiet
-vcom -work work C:/intelFPGA/pipeline/MEM_WB.vhd -quiet
-vcom -work work C:/intelFPGA/pipeline/EX_MEM_signals.vhd
-vcom -work work C:/intelFPGA/pipeline/EX_MEM.vhd
-vcom -work work C:/intelFPGA/pipeline/RegisterBankSignals.vhd
-vcom -work work C:/intelFPGA/pipeline/RegisterFile.vhd
-vcom -work work C:/intelFPGA/pipeline/ID_EX_signals.vhd
-vcom -work work C:/intelFPGA/pipeline/ID_EX.vhd
-vcom -work work C:/intelFPGA/pipeline/ControlUnitSignals.vhd
-vcom -work work C:/intelFPGA/pipeline/ControlUnit.vhd
-vcom -work work C:/intelFPGA/pipeline/IF_ID_signals.vhd
-vcom -work work C:/intelFPGA/pipeline/IF_ID.vhd
-vcom -work work C:/intelFPGA/pipeline/PCsignals.vhd
-vcom -work work C:/intelFPGA/pipeline/PC.vhd
-vcom -work work C:/intelFPGA/pipeline/tb_cpu.vhd
+# vcom -work work C:/intelFPGA/pipeline/ForwardingUnit.vhd -quiet
+# vcom -work work C:/intelFPGA/pipeline/MEM_WB_MUX.vhd -quiet
+# vcom -work work C:/intelFPGA/pipeline/InstructionMemory.vhd -quiet
+# vcom -work work C:/intelFPGA/pipeline/MEM_WB_signals.vhd -quiet
+# vcom -work work C:/intelFPGA/pipeline/MEM_WB.vhd -quiet
+# vcom -work work C:/intelFPGA/pipeline/EX_MEM_signals.vhd
+# vcom -work work C:/intelFPGA/pipeline/EX_MEM.vhd
+# vcom -work work C:/intelFPGA/pipeline/RegisterBankSignals.vhd
+# vcom -work work C:/intelFPGA/pipeline/RegisterFile.vhd
+# vcom -work work C:/intelFPGA/pipeline/ID_EX_signals.vhd
+# vcom -work work C:/intelFPGA/pipeline/ID_EX.vhd
+# vcom -work work C:/intelFPGA/pipeline/ControlUnitSignals.vhd
+# vcom -work work C:/intelFPGA/pipeline/ControlUnit.vhd
+# vcom -work work C:/intelFPGA/pipeline/IF_ID_signals.vhd
+# vcom -work work C:/intelFPGA/pipeline/IF_ID.vhd
+# vcom -work work C:/intelFPGA/pipeline/PCsignals.vhd
+# vcom -work work C:/intelFPGA/pipeline/PC.vhd
+# vcom -work work C:/intelFPGA/pipeline/tb_cpu.vhd
 
 # vcom -work work C:/Users/gpoli/pipeline/InstructionMemory.vhd
 # vcom -work work C:/Users/gpoli/pipeline/tb_cpu.vhd
@@ -55,6 +55,10 @@ proc checkSignal { signalName expectedVal } {
 	}
 }
 
+proc printSignal { signalName } {
+	set val [examine $signalName]
+	echo "$signalName has value $val"
+}
 # proc runClockCycles { count } {
 	# variable clockPeriod
 	# variable timeUnits
@@ -71,43 +75,116 @@ proc checkSignal { signalName expectedVal } {
 # variable clockPeriod [lindex $clockPeriod 0]
 
 
-# Inizializza i segnali
-# 
-
+# Inizializzazione dei segnali
 force clk 0 -deposit
 force reset 1 -deposit
 force PC_IN.PCin [format "%0*b" 32 0] -deposit
+force PC_OUT.PCout [format "%0*b" 32 0] -deposit
+force addressMem [format "%0*b" 32 0] -deposit
+force instructionMem [format "%0*b" 32 0] -deposit
+force IF_ID_IN.instruction [format "%0*b" 32 0] -deposit
+force IF_ID_OUT.instruction [format "%0*b" 32 0] -deposit
+force CU_IN.opcode [format "%0*b" 6 0] -deposit
+force CU_OUT.ALUsrc 0 -deposit
+force CU_OUT.ALUop [format "%0*b" 4 0] -deposit
+force CU_OUT.RegDst 0 -deposit
+force CU_OUT.RegWrite 0 -deposit
+force CU_OUT.MemRead 0 -deposit
+force CU_OUT.MemToReg 0 -deposit
+force CU_OUT.MemWrite 0 -deposit 
+force CU_OUT.Branch 0 -deposit
+force ID_EX_IN.PC [format "%0*b" 32 0] -deposit
+force ID_EX_IN.ReadData1 [format "%0*b" 32 0] -deposit
+force ID_EX_IN.ReadData2 [format "%0*b" 32 0] -deposit
 
+force RB_IN.read_address1 [format "%0*b" 5 0] -deposit
+force RB_IN.read_address2 [format "%0*b" 5 0] -deposit
+force RB_IN.RegWrite 0 -deposit
+force RB_IN.write_address [format "%0*b" 5 0] -deposit
+force ALU_IN.opA [format "%0*b" 32 0] -deposit
+force ALU_IN.opB [format "%0*b" 32 0] -deposit
+force ALU_IN.ALUop [format "%0*b" 4 0] -deposit
+
+
+
+# Esaminazione iniziale dei segnali
 set CLK [examine clk]
 set RESET [examine reset]
 set PCin [examine PC_IN.PCin]
+set addrMem [examine addressMem]
+set instrMem [examine instructionMem]
 
-set totalTime 10
+# Configurazione delle variabili di simulazione
+set totalTime 20  ;# Aumentato per vedere più cicli di FETCH
 set count 0
+set lastPCin 0   ;# Valore attuale di PC_IN.PCin
+set prevPCin 0   ;# Valore che sarà assegnato a PC_OUT.PCout
 
+# Ciclo di simulazione
 for {set time 0} {$time < $totalTime} {incr time 1} {
     run 1 us
     set CLK [examine clk]
     set RESET [examine reset]
-    set PCin [examine PC_IN.PCin]
-    set PCout [examine PC_OUT.PCout]
-    force PC_IN.PCin [format "%0*b" 32 $count] -deposit
-    echo "Time: $time us"
-    echo "Clk value is $CLK"
-    echo "Reset value is $RESET"
-    # echo "PC_IN.PCin value is $PCin"
-    # echo "PC_OUT.PCout value is $PCout"
-    
-    # Add a small delay to allow signal updates to propagate
-    run 10 ns
-    
-    set PCout [examine PC_OUT.PCout]
-    echo "PC_OUT.PCout value after delay is $PCout"
-    
-    checkSignal PC_IN.PCin [format "%0*b" 32 $count]
-	checkSignal PC_OUT.PCout [format "%0*b" 32 $count]
-    incr count 1
+
+    # Aggiorniamo PC_IN.PCin solo nei cicli di FETCH (multipli di 5)
+    if {[expr $time % 5] == 0} {
+        set lastPCin $count
+        incr count 1
+    }
+
+    # Il registro PC introduce un ritardo di 1 ciclo
+    set prevPCin $lastPCin
+
+    # Forziamo i segnali
+    force PC_IN.PCin [format "%0*b" 32 $lastPCin] -deposit
+    # force PC_OUT.PCout [format "%0*b" 32 $prevPCin] -deposit
+    force addressMem [format "%0*b" 32 $prevPCin] -deposit
+	force IF_ID_IN.instruction [examine instructionMem] -deposit
+	
+	# Estrai il valore di IF_ID_OUT.instruction
+	set instruction [examine IF_ID_OUT.instruction]
+
+	# Prendi i bit da 31 a 26 (ovvero i primi 6 caratteri della stringa binaria)
+	set opcode_bin [string range $instruction 0 5]
+
+	# Converte la stringa binaria in intero per evitare errori di lunghezza
+	set opcode_dec [expr "0b$opcode_bin"]
+
+	# Forza il valore sul segnale CU_IN.opcode
+	force CU_IN.opcode [format "%0*b" 6 $opcode_dec] -deposit
+
+	force RB_IN.read_address1 [format "%0*b" 5 [string range $instruction 6 10]] -deposit
+	
+    # Output dei segnali
+    echo "----------------------------------"
+    echo "Time: $time us | Clk: $CLK | Reset: $RESET"
+    echo "PC_IN.PCin   = $lastPCin"
+    echo "PC_OUT.PCout = $prevPCin"
+    echo "addressMem   = $prevPCin"
+
+
+    # Stampa segnali
+    printSignal PC_IN.PCin
+    printSignal PC_OUT.PCout
+    printSignal addressMem
+	printSignal instructionMem
+	printSignal IF_ID_IN.instruction
+	printSignal IF_ID_OUT.instruction
+	printSignal CU_IN.opcode
+	printSignal CU_OUT.ALUsrc
+	printSignal CU_OUT.ALUop
+	printSignal CU_OUT.RegDst
+	printSignal CU_OUT.RegWrite
+	printSignal CU_OUT.MemRead
+	printSignal CU_OUT.MemToReg
+	printSignal CU_OUT.MemWrite
+	printSignal RB_IN.read_address1
+	printSignal RB_IN.read_address2
+	printSignal RB_IN.write_address
 }
+
+
+
 
 add wave  \
 sim:/tb_cpu/clk \
