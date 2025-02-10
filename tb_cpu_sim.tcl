@@ -96,7 +96,9 @@ force CU_OUT.Branch 0 -deposit
 force ID_EX_IN.PC [format "%0*b" 32 0] -deposit
 force ID_EX_IN.ReadData1 [format "%0*b" 32 0] -deposit
 force ID_EX_IN.ReadData2 [format "%0*b" 32 0] -deposit
-
+force ID_EX_IN.RegAddr1 [format "%0*b" 5 0] -deposit
+force ID_EX_IN.RegAddr2 [format "%0*b" 5 0] -deposit
+force ID_EX_IN.RegDst 0 -deposit
 force RB_IN.read_address1 [format "%0*b" 5 0] -deposit
 force RB_IN.read_address2 [format "%0*b" 5 0] -deposit
 force RB_IN.RegWrite 0 -deposit
@@ -152,8 +154,27 @@ for {set time 0} {$time < $totalTime} {incr time 1} {
 
 	# Forza il valore sul segnale CU_IN.opcode
 	force CU_IN.opcode [format "%0*b" 6 $opcode_dec] -deposit
+	
+	set readAddress1_bin [string range $instruction 6 10]
+	set readAddress2_bin [string range $instruction 11 15]
+	
+	set readAddress1_dec [expr "0b$readAddress1_bin"]
+	set readAddress2_dec [expr "0b$readAddress2_bin"]
 
-	force RB_IN.read_address1 [format "%0*b" 5 [string range $instruction 6 10]] -deposit
+	force RB_IN.read_address1 [format "%0*b" 5 $readAddress1_dec] -deposit
+	force RB_IN.read_address2 [format "%0*b" 5 $readAddress2_dec] -deposit
+	
+	force ID_EX_IN.RegAddr1 [format "%0*b" 5 $readAddress1_dec] -deposit
+	force ID_EX_IN.RegAddr2 [format "%0*b" 5 $readAddress2_dec] -deposit
+	
+	if {[examine ID_EX_OUT.RegDst] == 1} {
+		set writeAddress_bin [examine ID_EX_OUT.RegAddr1]
+	} else {
+		set writeAddress_bin [examine ID_EX_OUT.RegAddr2]
+	}
+	set writeAddress_dec [expr "0b$writeAddress_bin"]
+	force RB_IN.write_address [format "%0*b" 5 $writeAddress_dec] -deposit
+	
 	
     # Output dei segnali
     echo "----------------------------------"
@@ -181,6 +202,10 @@ for {set time 0} {$time < $totalTime} {incr time 1} {
 	printSignal RB_IN.read_address1
 	printSignal RB_IN.read_address2
 	printSignal RB_IN.write_address
+	printSignal ID_EX_IN.RegAddr1
+	printSignal ID_EX_IN.RegAddr2
+	printSignal ID_EX_OUT.RegAddr1
+	printSignal ID_EX_OUT.RegAddr2
 }
 
 
